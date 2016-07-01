@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*
 
 import pyodbc
+import platform
 
 
 class ConnectionError(Exception):
@@ -15,7 +16,11 @@ class Database(object):
     def __init__(self):
         self.database_name = 'IDATDB'
         self.port = 1433
-        self.driver = 'FreeTDS'
+        if platform.system() == 'Darwin':
+            self.driver = 'FreeTDS'
+        elif platform.system() == 'Windows':
+            self.driver = '{Sql Server}'
+
         self.connected = False
         self.odbc_connection = None
 
