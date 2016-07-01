@@ -13,6 +13,7 @@ class LoginViewController(object):
 
     def __init__(self, frame):
         self.frame = frame
+        self.panel = frame.panel
         self.login_button = frame.login_button
         self.remember = frame.remember
         self.login_state = frame.login_state
@@ -49,7 +50,7 @@ class LoginViewController(object):
             self.database.connect(uid, pwd, server)
         except IDATdb.ConnectionError:
             self.login_state.SetLabelText('登录失败, 请检查信息')
-            self.frame.Layout()
+            self.panel.Layout()
 
     def remember_changed(self, event):
         self.config.remember = event.Checked()
