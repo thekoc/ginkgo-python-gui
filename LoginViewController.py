@@ -57,6 +57,6 @@ class LoginViewController(object):
 
 if __name__ == '__main__':
     app = wx.App(False)
-    frame = LoginFrame(None, 'Login')
-    controller = LoginViewController(frame)
+    test_frame = LoginFrame(None, 'Login')
+    controller = LoginViewController(test_frame)
     app.MainLoop()

@@ -1,6 +1,7 @@
 import ConfigParser
 import os
 
+
 class AppConfig(object):
     def __init__(self):
         self.file_path = 'AppData/app.cfg'
