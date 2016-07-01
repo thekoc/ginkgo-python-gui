@@ -6,7 +6,12 @@ class AppConfig(object):
     def __init__(self):
         self.file_path = 'AppData/app.cfg'
         self.config = ConfigParser.SafeConfigParser()
-        self.config.read(self.file_path)
+        if not os.path.isfile(self.file_path):
+            self.config.add_section('Login')
+            self.config.set('Login', 'remember', 'False')
+            self.save_to_file()
+        else:
+            self.config.read(self.file_path)
 
     def __del__(self):
         self.save_to_file()
