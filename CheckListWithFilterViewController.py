@@ -1,13 +1,15 @@
 import wx
 
+
 class CheckListWithFilterViewController(object):
+
     def __init__(self, panel):
         # type: (CheckListWithFilterView.CheckListWithFilterPanel) -> None
         self.panel = panel
         self.list_ctrl = panel.list_ctrl
         self.select_all_button = panel.select_all_button
         self.deselect_all_button = panel.deselect_all_button
-        self.reverse_button = panel.reverse_button
+        self.reverse_select_button = panel.reverse_select_button
         self.more_button = panel.more_button
 
         self.view_loaded()
@@ -18,6 +20,8 @@ class CheckListWithFilterViewController(object):
 
     def action_bind(self):
         self.select_all_button.Bind(wx.EVT_BUTTON, self.select_all)
+        self.deselect_all_button.Bind(wx.EVT_BUTTON, self.deselect_all)
+        self.reverse_select_button.Bind(wx.EVT_BUTTON, self.reverse_select)
 
     def select_all(self, event):
         num = self.list_ctrl.GetItemCount()

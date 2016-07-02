@@ -36,11 +36,11 @@ class CheckListWithFilterPanel(wx.Panel):
         self.select_all_button = select_all_button = wx.Button(self, label=u'全部选择')
         button_box.Add(select_all_button, 1, wx.EXPAND)
 
-        self.delete_all_button = delect_all_button = wx.Button(self, label=u'全部取消')
-        button_box.Add(delect_all_button, 1, wx.EXPAND)
+        self.deselect_all_button = deselect_all_button = wx.Button(self, label=u'全部取消')
+        button_box.Add(deselect_all_button, 1, wx.EXPAND)
 
-        self.reverse_button = reverse_button = wx.Button(self, label=u'反选')
-        button_box.Add(reverse_button, 1, wx.EXPAND)
+        self.reverse_select_button = reverse_select_button = wx.Button(self, label=u'反选')
+        button_box.Add(reverse_select_button, 1, wx.EXPAND)
 
         self.more_button = more_button = wx.Button(self, label=u'查看详情')
         button_box.Add(more_button, 1, wx.EXPAND)
