@@ -5,7 +5,7 @@ class LoginFrame(wx.Frame):
     """A frame that allows you to login."""
 
     def __init__(self, parent, title):
-        wx.Frame.__init__(self, parent, title=title, size=(300, 300))
+        wx.Frame.__init__(self, parent, title=title)
         self.panel = wx.Panel(self)
         self.init_ui()
 
@@ -24,19 +24,19 @@ class LoginFrame(wx.Frame):
         self.login_state = login_state = wx.StaticText(panel, label='')
 
         # ip box
-        ip_text = wx.StaticText(panel, label='地址:')
+        ip_text = wx.StaticText(panel, label=u'地址:')
         self.ip_text_field = ip_text_field = wx.TextCtrl(panel)
         ip_box.Add(ip_text, 1, wx.ALIGN_CENTER_VERTICAL)
         ip_box.Add(ip_text_field, 4, wx.ALIGN_CENTER_VERTICAL)
 
         # uid box
-        uid_text = wx.StaticText(panel, label='用户名:')
+        uid_text = wx.StaticText(panel, label=u'用户名:')
         self.uid_text_field = uid_text_field = wx.TextCtrl(panel)
         uid_box.Add(uid_text, 1, wx.ALIGN_CENTER_VERTICAL)
         uid_box.Add(uid_text_field, 4, wx.ALIGN_CENTER_VERTICAL)
 
         # pwd box
-        pwd_text = wx.StaticText(panel, label='密码:')
+        pwd_text = wx.StaticText(panel, label=u'密码:')
         self.pwd_text_field = pwd_text_field =  wx.TextCtrl(panel, style=wx.TE_PASSWORD)
         pwd_box.Add(pwd_text, 1, wx.ALIGN_CENTER_VERTICAL)
         pwd_box.Add(pwd_text_field, 4, wx.ALIGN_CENTER_VERTICAL)
@@ -46,8 +46,8 @@ class LoginFrame(wx.Frame):
         vbox.AddStretchSpacer(prop=0.1)
 
         # login box
-        self.login_button = login_button =  wx.Button(panel, label='连接')
-        self.remember = remember = wx.CheckBox(panel, -1, '记住我')
+        self.login_button = login_button = wx.Button(panel, label=u'连接')
+        self.remember = remember = wx.CheckBox(panel, -1, u'记住我')
         login_box.Add(login_button, 1, wx.ALIGN_CENTER_VERTICAL | wx.RIGHT, 10)
         login_box.Add(remember, 0, wx.ALIGN_CENTER_VERTICAL)
 
@@ -59,8 +59,12 @@ class LoginFrame(wx.Frame):
         vbox.Add(login_state, 1, wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_TOP)
 
         panel.SetSizerAndFit(vbox)
-        self.Fit()
 
+        self.Fit()
         self.Centre()
         self.Show(True)
 
+if __name__ == '__main__':
+    app = wx.App(False)
+    test_frame = LoginFrame(None, 'Login')
+    app.MainLoop()

@@ -49,7 +49,7 @@ class LoginViewController(object):
         try:
             self.database.connect(uid, pwd, server)
         except IDATdb.ConnectionError:
-            self.login_state.SetLabelText('登录失败, 请检查信息')
+            self.login_state.SetLabelText(u'登录失败, 请检查信息')
             self.panel.Layout()
 
     def remember_changed(self, event):
