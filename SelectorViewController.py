@@ -13,6 +13,7 @@ def _wxdate2pydate(date):
     else:
         return None
 
+
 class SelectorViewController(object):
     def __init__(self, frame):
         # type: (SelectorFrame) -> None
@@ -34,15 +35,19 @@ class SelectorViewController(object):
         self.edit_button.Bind(wx.EVT_BUTTON, self.edit_case)
         self.delete_button.Bind(wx.EVT_BUTTON, self.delete_case)
         self.clear_button.Bind(wx.EVT_BUTTON, self.clear_case)
+        self.list_box.Bind(wx.EVT_LISTBOX_DCLICK, self.edit_case)
+        self.inquire_button.Bind(wx.EVT_BUTTON, self.inquire)
 
     def add_case(self, event):
-        self.list_box.Append('place holder')
+        case = ''
+        if self.is_legal_case(case):
+            self.list_box.Append('place holder')
 
     def edit_case(self, event):
         sel = self.list_box.GetSelection()
         text = self.list_box.GetString(sel)
-        renamed = wx.GetTextFromUser(u'编辑', u'编辑用例', text)
-        if renamed != '':
+        renamed = wx.GetTextFromUser(u'请输入新值', u'编辑用例', text)
+        if renamed != '' and self.is_legal_case(renamed):
             self.list_box.Delete(sel)
             self.list_box.Insert(renamed, sel)
 
@@ -50,15 +55,22 @@ class SelectorViewController(object):
         sel = self.list_box.GetSelection()
         if sel != -1:
             self.list_box.Delete(sel)
+            self.list_box.SetSelection(sel-1)
 
     def clear_case(self, event):
         self.list_box.Clear()
+
+    def inquire(self, event):
+        pass
 
     def get_start_date(self):
         return _wxdate2pydate(self.start_date_ctrl.Value)
 
     def get_end_date(self):
         return _wxdate2pydate(self.end_date_ctrl.Value)
+
+    def is_legal_case(self, case_name):
+        return True
 
 if __name__ == '__main__':
     app = wx.App(False)
