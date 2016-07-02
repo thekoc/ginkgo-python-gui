@@ -1,4 +1,8 @@
 import wx
+import sys
+from CheckListWithFilterView import CheckListWithFilterPanel
+
+fake_data = [('android', '121'), ('ios', '34'), ('windows', '334'), ('linux', '41')]
 
 
 class CheckListWithFilterViewController(object):
@@ -11,6 +15,8 @@ class CheckListWithFilterViewController(object):
         self.deselect_all_button = panel.deselect_all_button
         self.reverse_select_button = panel.reverse_select_button
         self.more_button = panel.more_button
+        self.filter_button = panel.filter_button
+        self.filter_text_ctrl = panel.filter_text_ctrl
 
         self.view_loaded()
         self.action_bind()
@@ -38,6 +44,13 @@ class CheckListWithFilterViewController(object):
         for i in range(num):
             self.list_ctrl.CheckItem(i, not self.list_ctrl.IsChecked(i))
 
+    def filter(self, event):
+        text = self.filter_text_ctrl.Value
+        num = self.list_ctrl.GetItemCount()
+        for i in range(num):
+            if text in self.list_ctrl.GetItemText(i):
+                pass
+
     def insert_column(self, column, title):
         # type: (int, basestring) -> None
         self.panel.column += 1
@@ -54,3 +67,15 @@ class CheckListWithFilterViewController(object):
                 else:
                     self.list_ctrl.SetStringItem(index, no, item)
                     self.list_ctrl.SetStringItem(index, no, item)
+
+if __name__ == '__main__':
+    app = wx.App(False)
+    frame = wx.Frame(None, title='testView')
+    P = CheckListWithFilterPanel(frame)
+    C = CheckListWithFilterViewController(P)
+    C.insert_column(0, 'Firmware')
+    C.insert_column(1, 'Amount')
+    for i in fake_data:
+        C.insert_row(sys.maxint, i)
+    frame.Show()
+    app.MainLoop()
