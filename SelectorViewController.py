@@ -28,7 +28,13 @@ class SelectorViewController(object):
         self.clear_button = frame.clear_button
         self.inquire_button = frame.inquire_button
 
+        self.view_loaded()
         self.action_bind()
+
+    def view_loaded(self):
+        # debug
+        for i in range(10):
+            self.list_box.Append('123')
 
     def action_bind(self):
         self.new_button.Bind(wx.EVT_BUTTON, self.add_case)

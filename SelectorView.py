@@ -30,8 +30,6 @@ class SelectorFrame(wx.Frame):
 
         self.list_box = list_box = wx.ListBox(panel, -1)
         case_box.Add(list_box, 1, wx.EXPAND | wx.UP, 10)
-        for i in range(10):
-            list_box.Append('123')
 
         button_panel = wx.Panel(panel, -1)
         button_box = wx.BoxSizer(wx.VERTICAL)
@@ -54,15 +52,12 @@ class SelectorFrame(wx.Frame):
         main_box.Add(inquire_button, 0, wx.EXPAND | wx.ALL, 10)
 
         panel.SetSizerAndFit(main_box)
-        main_box.Layout()
-        panel.Layout()
         self.Fit()
         self.Centre()
         self.Show(True)
 
 
 if __name__ == '__main__':
-    if __name__ == '__main__':
-        app = wx.App(False)
-        test_frame = SelectorFrame(None, 'Selector')
-        app.MainLoop()
+    app = wx.App(False)
+    test_frame = SelectorFrame(None, 'Selector')
+    app.MainLoop()
