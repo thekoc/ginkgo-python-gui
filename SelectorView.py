@@ -11,7 +11,7 @@ class SelectorFrame(wx.Frame):
         self.panel = panel = wx.Panel(self)
         main_box = wx.BoxSizer(wx.VERTICAL)
 
-        # 时间选择
+        # ======== time selector ========
         date_box = wx.BoxSizer(wx.HORIZONTAL)
         self.start_date_ctrl = start_date = wx.DatePickerCtrl(
             panel, -1, style=wx.DP_DROPDOWN | wx.DP_SHOWCENTURY)
@@ -25,18 +25,21 @@ class SelectorFrame(wx.Frame):
         date_box.Add(end_date, 1, wx.ALIGN_CENTER_VERTICAL)
         main_box.Add(date_box, 0, wx.EXPAND | wx.ALL, 10)
 
-        # 用例选择
+        # ======== case selector ========
         case_box = wx.BoxSizer(wx.HORIZONTAL)
 
         self.list_box = list_box = wx.ListBox(panel, -1)
         case_box.Add(list_box, 1, wx.EXPAND | wx.UP, 10)
 
+        # ======== button panel ========
         button_panel = wx.Panel(panel, -1)
         button_box = wx.BoxSizer(wx.VERTICAL)
         self.new_button = new_button = wx.Button(button_panel, label=u'添加用例')
         self.edit_button = edit_button = wx.Button(button_panel, label=u'编辑用例')
-        self.delete_button = delete_button = wx.Button(button_panel, label=u'删除用例')
-        self.clear_button = clear_button = wx.Button(button_panel, label=u'清除全部')
+        self.delete_button = delete_button = wx.Button(
+            button_panel, label=u'删除用例')
+        self.clear_button = clear_button = wx.Button(
+            button_panel, label=u'清除全部')
 
         button_box.Add(new_button, 1, wx.EXPAND | wx.UP, 10)
         button_box.Add(edit_button, 1, wx.EXPAND | wx.UP, 10)
@@ -47,8 +50,9 @@ class SelectorFrame(wx.Frame):
 
         main_box.Add(case_box, 1, wx.EXPAND | wx.ALL, 10)
 
-        # 查询按钮
-        self.inquire_button = inquire_button = wx.Button(panel, label=u'查询用例测试固件')
+        # ======== inqure button ========
+        self.inquire_button = inquire_button = wx.Button(
+            panel, label=u'查询用例测试固件')
         main_box.Add(inquire_button, 0, wx.EXPAND | wx.ALL, 10)
 
         panel.SetSizerAndFit(main_box)

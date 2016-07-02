@@ -1,11 +1,7 @@
 # -*- coding: utf-8 -*
 
 import wx
-import sys
 from wx.lib.mixins.listctrl import CheckListCtrlMixin, ListCtrlAutoWidthMixin
-from CheckListWithFilterViewController import CheckListWithFilterViewController
-
-fake_data = [('android', '121'), ('ios', '34'), ('windows', '334'), ('linux', '41')]
 
 
 class CheckListCtrl(wx.ListCtrl, CheckListCtrlMixin, ListCtrlAutoWidthMixin):
@@ -22,16 +18,13 @@ class CheckListWithFilterPanel(wx.Panel):
         main_box = wx.BoxSizer(wx.VERTICAL)
         list_box = wx.BoxSizer(wx.HORIZONTAL)
 
-        # list ctrl setting
+        # ======== list ctrl setting ========
         self.list_ctrl = list_ctrl = CheckListCtrl(self)
         # list_ctrl.Bind(wx.EVT_LIST_ITEM_ACTIVATED, printhh)
 
-        for i in fake_data:
-            index = self.list_ctrl.InsertStringItem(sys.maxint, i[0])
-            self.list_ctrl.SetStringItem(index, 1, i[1])
-
         list_box.Add(list_ctrl, 1, wx.EXPAND)
-        # buttons setting
+
+        # ======== buttons setting ========
         button_box = wx.BoxSizer(wx.VERTICAL)
         self.select_all_button = select_all_button = wx.Button(self, label=u'全部选择')
         button_box.Add(select_all_button, 1, wx.EXPAND)
@@ -45,9 +38,17 @@ class CheckListWithFilterPanel(wx.Panel):
         self.more_button = more_button = wx.Button(self, label=u'查看详情')
         button_box.Add(more_button, 1, wx.EXPAND)
 
-        list_box.Add(button_box, 0, wx.EXPAND)
+        list_box.Add(button_box, 0, wx.EXPAND | wx.LEFT, 10)
+        main_box.Add(list_box, 1, wx.EXPAND | wx.ALL, 10)
 
-        main_box.Add(list_box, 1, wx.EXPAND)
+        # ======== filter setting ========
+        filter_box = wx.BoxSizer(wx.HORIZONTAL)
+        self.filter_text_ctrl = filter_text_ctrl = wx.TextCtrl(self)
+        filter_box.Add(filter_text_ctrl, 1, wx.EXPAND)
+        self.filter_button = filter_button = wx.Button(self, label=u'搜索')
+        filter_box.Add(filter_button, 0, wx.EXPAND | wx.LEFT, 10)
+
+        main_box.Add(filter_box, 0, wx.EXPAND | wx.ALL, 10)
 
         self.SetSizerAndFit(main_box)
 
@@ -56,10 +57,5 @@ if __name__ == '__main__':
     app = wx.App(False)
     frame = wx.Frame(None, title='testView')
     P = CheckListWithFilterPanel(frame)
-    C = CheckListWithFilterViewController(P)
-    C.insert_column(0, 'Firmware')
-    C.insert_column(1, 'Amount')
-    for i in fake_data:
-        C.insert_row(sys.maxint, i)
     frame.Show()
     app.MainLoop()
