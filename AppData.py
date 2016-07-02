@@ -1,24 +1,33 @@
 import ConfigParser
 import os
+import threading
 
 
 class AppConfig(object):
+    file_path = 'AppData/app.cfg'
+    lock = threading.Lock()
+
     def __init__(self):
-        self.file_path = 'AppData/app.cfg'
-        self.config = ConfigParser.SafeConfigParser()
-        if not os.path.isfile(self.file_path):
-            self.config.add_section('Login')
-            self.config.set('Login', 'remember', 'False')
-            self.save_to_file()
-        else:
-            self.config.read(self.file_path)
+        if not hasattr(AppConfig, 'config'):
+            config = ConfigParser.SafeConfigParser()
+            if not os.path.isfile(self.file_path):
+                config.add_section('Login')
+                config.set('Login', 'remember', 'False')
+                self.save_to_file()
+            else:
+                config.read(self.file_path)
+            AppConfig.config = config
 
     def __del__(self):
         self.save_to_file()
 
     def save_to_file(self):
-        with open(self.file_path, 'wb') as configfile:
-            self.config.write(configfile)
+        AppConfig.lock.acquire()
+        try:
+            with open(self.file_path, 'wb') as configfile:
+                self.config.write(configfile)
+        finally:
+            AppConfig.lock.release()
 
     @property
     def remember(self):
