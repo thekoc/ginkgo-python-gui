@@ -5,6 +5,7 @@ from LoginView import LoginFrame
 from AppData import AppConfig
 import IDATdb
 import wx
+import thread
 
 
 class LoginViewController(object):
@@ -44,11 +45,17 @@ class LoginViewController(object):
             self.config.uid = uid
             self.config.password = pwd
             self.config.ip = server
+        thread.start_new_thread(self.database_connect, (uid, pwd, server))
+
+    def database_connect(self, uid, pwd, server):
         try:
             self.database.connect(uid, pwd, server)
         except IDATdb.ConnectionError:
-            self.login_state.SetLabelText(u'登录失败, 请检查信息')
-            self.panel.Layout()
+            wx.CallAfter(lambda : self.login_state.SetLabelText(u'登录失败, 请检查信息'))
+            wx.CallAfter(lambda : self.panel.Layout())
+        else:
+            pass
+
 
     def remember_changed(self, event):
         self.config.remember = event.Checked()
