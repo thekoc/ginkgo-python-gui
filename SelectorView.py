@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*
 
 import wx
-import wx.lib.scrolledpanel
 
 
 class SelectorFrame(wx.Frame):

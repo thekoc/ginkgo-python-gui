@@ -13,6 +13,7 @@ class LoginViewController(object):
     config = AppConfig()
 
     def __init__(self, frame):
+        # type: (LoginFrame) -> None
         self.frame = frame
         self.panel = frame.panel
         self.login_button = frame.login_button
