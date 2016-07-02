@@ -26,10 +26,8 @@ class LoginViewController(object):
         self.action_bind()
 
     def action_bind(self):
-        frame = self.frame
-
-        frame.Bind(wx.EVT_BUTTON, self.login, self.login_button)
-        frame.Bind(wx.EVT_CHECKBOX, self.remember_changed, self.remember)
+        self.login_button.Bind(wx.EVT_BUTTON, self.login)
+        self.remember.Bind(wx.EVT_CHECKBOX, self.remember_changed)
 
     def view_loaded(self):
         if self.config.remember:
