@@ -3,6 +3,7 @@
 import wx
 import sys
 from wx.lib.mixins.listctrl import CheckListCtrlMixin, ListCtrlAutoWidthMixin
+from CheckListWithFilterViewController import CheckListWithFilterViewController
 
 fake_data = [('android', '121'), ('ios', '34'), ('windows', '334'), ('linux', '41')]
 
@@ -30,8 +31,6 @@ class CheckListWithFilterPanel(wx.Panel):
             self.list_ctrl.SetStringItem(index, 1, i[1])
 
         list_box.Add(list_ctrl, 1, wx.EXPAND)
-
-
         # buttons setting
         button_box = wx.BoxSizer(wx.VERTICAL)
         self.select_all_button = select_all_button = wx.Button(self, label=u'全部选择')
@@ -46,39 +45,21 @@ class CheckListWithFilterPanel(wx.Panel):
         self.more_button = more_button = wx.Button(self, label=u'查看详情')
         button_box.Add(more_button, 1, wx.EXPAND)
 
-
         list_box.Add(button_box, 0, wx.EXPAND)
-
 
         main_box.Add(list_box, 1, wx.EXPAND)
 
         self.SetSizerAndFit(main_box)
-
-    def insert_column(self, column, title):
-        # type: (int, basestring) -> None
-        self.column += 1
-        self.list_ctrl.InsertColumn(column, title, width=-1)
-
-    def insert_row(self, row, items):
-        if len(items) != self.column:
-            raise ValueError('Wrong Dimensionality')
-        else:
-            index = 0
-            for no, item in enumerate(items):
-                if no == 0:
-                    index = self.list_ctrl.InsertStringItem(row, item)
-                else:
-                    self.list_ctrl.SetStringItem(index, no, item)
-                    self.list_ctrl.SetStringItem(index, no, item)
 
 
 if __name__ == '__main__':
     app = wx.App(False)
     frame = wx.Frame(None, title='testView')
     P = CheckListWithFilterPanel(frame)
-    P.insert_column(0, 'Firmware')
-    P.insert_column(1, 'Amount')
+    C = CheckListWithFilterViewController(P)
+    C.insert_column(0, 'Firmware')
+    C.insert_column(1, 'Amount')
     for i in fake_data:
-        P.insert_row(sys.maxint, i)
+        C.insert_row(sys.maxint, i)
     frame.Show()
     app.MainLoop()
