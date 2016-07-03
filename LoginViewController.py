@@ -2,7 +2,7 @@
 
 from IDATdb import Database
 from LoginView import LoginFrame
-from AppData import AppConfig
+from AppData.AppConfig import AppConfig
 import IDATdb
 import wx
 import thread
