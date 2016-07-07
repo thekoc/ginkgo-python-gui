@@ -82,8 +82,7 @@ class CheckListWithFilterPanelController(object):
 if __name__ == '__main__':
     app = wx.App(False)
     frame = wx.Frame(None, title='testView')
-    P = CheckListWithFilterPanel(frame)
-    C = CheckListWithFilterPanelController(P)
+    C = CheckListWithFilterPanelController(frame)
     C.insert_column(0, 'Firmware')
     C.insert_column(1, 'Amount')
     for i in fake_data:
