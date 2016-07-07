@@ -8,12 +8,14 @@ import wx
 import thread
 
 
-class LoginViewController(object):
+class LoginFrameController(object):
     database = Database()
     config = AppConfig()
 
-    def __init__(self, frame):
+    def __init__(self, frame=None):
         # type: (LoginFrame) -> None
+        if frame is None:
+            frame = LoginFrame(None, u'登录')
         self.frame = frame
         self.panel = frame.panel
         self.login_button = frame.login_button
@@ -65,5 +67,5 @@ class LoginViewController(object):
 if __name__ == '__main__':
     app = wx.App(False)
     test_frame = LoginFrame(None, 'Login')
-    controller = LoginViewController(test_frame)
+    controller = LoginFrameController(test_frame)
     app.MainLoop()

@@ -6,8 +6,10 @@ import wx
 
 
 class DataFrameController(object):
-    def __init__(self, frame):
+    def __init__(self, frame=None):
         # type: (DataFrame) -> None
+        if frame is None:
+            frame = DataFrame(None, '')
         self.frame = frame
         self.graph_controller = MatplotlibPanelController(frame.graph)
         self.firmware_list = frame.firmware_list

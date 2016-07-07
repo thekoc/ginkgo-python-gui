@@ -15,8 +15,10 @@ def _wxdate2pydate(date):
 
 
 class SelectorViewController(object):
-    def __init__(self, frame):
+    def __init__(self, frame=None):
         # type: (SelectorFrame) -> None
+        if frame is None:
+            frame = SelectorFrame(None, '选择用例')
         self.frame = frame
 
         self.start_date_ctrl = frame.start_date_ctrl

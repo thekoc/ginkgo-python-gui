@@ -8,8 +8,10 @@ fake_data = [('android', '121'), ('ios', '34'), ('windows', '334'), ('linux', '4
 
 class CheckListWithFilterPanelController(object):
 
-    def __init__(self, panel):
+    def __init__(self, parent, panel=None):
         # type: (CheckListWithFilterView.CheckListWithFilterPanel) -> None
+        if panel is None:
+            panel = CheckListWithFilterPanel(parent)
         self.panel = panel
         self.list_ctrl = panel.list_ctrl
         self.select_all_button = panel.select_all_button

@@ -15,7 +15,7 @@ class DataFrame(wx.Frame):
         self.graph = graph = MatplotlibPanel(panel)
         main_box.Add(graph, 1, wx.EXPAND)
 
-        # ======== buttom box ========
+        # ======== button box ========
         bottom_box = wx.BoxSizer(wx.HORIZONTAL)
 
         # ======== option panel ========
