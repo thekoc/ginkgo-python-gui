@@ -20,23 +20,21 @@ class CheckListWithFilterPanel(wx.Panel):
 
         # ======== list ctrl setting ========
         self.list_ctrl = list_ctrl = CheckListCtrl(self)
-        # list_ctrl.Bind(wx.EVT_LIST_ITEM_ACTIVATED, printhh)
-
         list_box.Add(list_ctrl, 1, wx.EXPAND)
 
         # ======== buttons setting ========
         button_box = wx.BoxSizer(wx.VERTICAL)
         self.select_all_button = select_all_button = wx.Button(self, label=u'全部选择')
-        button_box.Add(select_all_button, 1, wx.EXPAND)
+        button_box.Add(select_all_button, 1, wx.EXPAND | wx.TOP | wx.BOTTOM, 3)
 
         self.deselect_all_button = deselect_all_button = wx.Button(self, label=u'全部取消')
-        button_box.Add(deselect_all_button, 1, wx.EXPAND)
+        button_box.Add(deselect_all_button, 1, wx.EXPAND | wx.TOP | wx.BOTTOM, 3)
 
         self.reverse_select_button = reverse_select_button = wx.Button(self, label=u'反选')
-        button_box.Add(reverse_select_button, 1, wx.EXPAND)
+        button_box.Add(reverse_select_button, 1, wx.EXPAND | wx.TOP | wx.BOTTOM, 3)
 
-        self.more_button = more_button = wx.Button(self, label=u'查看详情')
-        button_box.Add(more_button, 1, wx.EXPAND)
+        self.custom_button = custom_button = wx.Button(self, label=u'查看详情')
+        button_box.Add(custom_button, 1, wx.EXPAND | wx.TOP | wx.BOTTOM, 3)
 
         list_box.Add(button_box, 0, wx.EXPAND | wx.LEFT, 10)
         main_box.Add(list_box, 1, wx.EXPAND | wx.ALL, 10)
@@ -57,5 +55,6 @@ if __name__ == '__main__':
     app = wx.App(False)
     frame = wx.Frame(None, title='testView')
     P = CheckListWithFilterPanel(frame)
+    frame.Fit()
     frame.Show()
     app.MainLoop()

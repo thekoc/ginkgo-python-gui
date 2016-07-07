@@ -1,9 +1,9 @@
 import wx
 import matplotlib
+matplotlib.use("WxAgg")
 from matplotlib.backends.backend_wxagg import FigureCanvasWxAgg as FigureCanvas
 from matplotlib.backends.backend_wx import NavigationToolbar2Wx
 from matplotlib.figure import Figure
-matplotlib.use("WxAgg")
 
 
 class MatplotlibPanel(wx.Panel):

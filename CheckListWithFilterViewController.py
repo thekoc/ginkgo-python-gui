@@ -14,7 +14,7 @@ class CheckListWithFilterViewController(object):
         self.select_all_button = panel.select_all_button
         self.deselect_all_button = panel.deselect_all_button
         self.reverse_select_button = panel.reverse_select_button
-        self.more_button = panel.more_button
+        self.custom_button = panel.custom_button
         self.filter_button = panel.filter_button
         self.filter_text_ctrl = panel.filter_text_ctrl
 
@@ -28,6 +28,8 @@ class CheckListWithFilterViewController(object):
         self.select_all_button.Bind(wx.EVT_BUTTON, self.select_all)
         self.deselect_all_button.Bind(wx.EVT_BUTTON, self.deselect_all)
         self.reverse_select_button.Bind(wx.EVT_BUTTON, self.reverse_select)
+        self.list_ctrl.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.double_click)
+        self.list_ctrl.Bind(wx.EVT_LIST_COL_CLICK, self.column_click)
 
     def select_all(self, event):
         num = self.list_ctrl.GetItemCount()
@@ -50,6 +52,12 @@ class CheckListWithFilterViewController(object):
         for i in range(num):
             if text in self.list_ctrl.GetItemText(i):
                 pass
+
+    def double_click(self, event):
+        pass
+
+    def column_click(self, event):
+        pass
 
     def insert_column(self, column, title):
         # type: (int, basestring) -> None

@@ -2,9 +2,12 @@ import ConfigParser
 import os
 import threading
 
+path = os.path.abspath(__file__)
+dir_path = os.path.dirname(path)
+
 
 class AppConfig(object):
-    file_path = 'AppData/app.cfg'
+    file_path = os.path.join(dir_path, 'Data/app.cfg')
     lock = threading.Lock()
 
     def __init__(self):
@@ -13,10 +16,11 @@ class AppConfig(object):
             if not os.path.isfile(self.file_path):
                 config.add_section('Login')
                 config.set('Login', 'remember', 'False')
+                AppConfig.config = config
                 self.save_to_file()
             else:
                 config.read(self.file_path)
-            AppConfig.config = config
+                AppConfig.config = config
 
     def __del__(self):
         self.save_to_file()
