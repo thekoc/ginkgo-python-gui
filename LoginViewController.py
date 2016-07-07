@@ -5,6 +5,8 @@ from LoginView import LoginFrame
 from AppData.AppConfig import AppConfig
 import IDATdb
 import wx
+from wx.lib.pubsub import pub
+from Radio.MessageType import FrameMessage
 import thread
 
 
@@ -54,10 +56,10 @@ class LoginFrameController(object):
         try:
             self.database.connect(uid, pwd, server)
         except IDATdb.ConnectionError:
-            wx.CallAfter(lambda : self.login_state.SetLabelText(u'登录失败, 请检查信息'))
-            wx.CallAfter(lambda : self.panel.Layout())
-        else:
-            pass
+            wx.CallAfter(lambda: self.login_state.SetLabelText(u'登录失败, 请检查信息'))
+            wx.CallAfter(self.panel.Layout)
+        finally:
+            pub.sendMessage("FrameRadio", sender=self.frame, msg=FrameMessage.logged_in)
 
 
     def remember_changed(self, event):
