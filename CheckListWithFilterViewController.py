@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*
 import wx
 import sys
 from CheckListWithFilterView import CheckListWithFilterPanel
@@ -5,7 +6,7 @@ from CheckListWithFilterView import CheckListWithFilterPanel
 fake_data = [('android', '121'), ('ios', '34'), ('windows', '334'), ('linux', '41')]
 
 
-class CheckListWithFilterViewController(object):
+class CheckListWithFilterPanelController(object):
 
     def __init__(self, panel):
         # type: (CheckListWithFilterView.CheckListWithFilterPanel) -> None
@@ -80,7 +81,7 @@ if __name__ == '__main__':
     app = wx.App(False)
     frame = wx.Frame(None, title='testView')
     P = CheckListWithFilterPanel(frame)
-    C = CheckListWithFilterViewController(P)
+    C = CheckListWithFilterPanelController(P)
     C.insert_column(0, 'Firmware')
     C.insert_column(1, 'Amount')
     for i in fake_data:
