@@ -20,6 +20,13 @@ class DataFrameController(object):
         self.firmware_controller.insert_column(1, u'测试用例数')
         self.firmware_controller.insert_column(2, u'总数')
 
+    def set_start_data(self, post_data):
+        self.database.set_available_data(post_data)
+        content_rows = self.database.get_list_content()
+        for i, row in enumerate(content_rows):
+            self.firmware_controller.insert_row(i, row)
+
+
 
 if __name__ == '__main__':
     app = wx.App()

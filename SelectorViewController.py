@@ -41,7 +41,8 @@ class SelectorFrameController(object):
     def view_loaded(self):
         # debug
         for i, j in enumerate(sorted(list(self.database.case_set))):
-            self.list_box.Append(j)
+            if i < 10:
+                self.list_box.Append(j)
 
     def action_bind(self):
         self.new_button.Bind(wx.EVT_BUTTON, self.add_case)
@@ -76,7 +77,11 @@ class SelectorFrameController(object):
         self.list_box.Clear()
 
     def inquire(self, event):
-        pub.sendMessage('FrameRadio', sender=self.frame, msg=FrameMessage.inquire)
+        data = dict()
+        data['date'] = (self.get_start_date(), self.get_end_date())
+        data['case_set'] = set(self.list_box.GetItems())
+        pub.sendMessage('FrameRadio', sender=self.frame, msg=FrameMessage.inquire,
+                        data=data)
 
     def get_start_date(self):
         return _wxdate2pydate(self.start_date_ctrl.Value)
