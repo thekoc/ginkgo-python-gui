@@ -11,11 +11,11 @@ import thread
 
 
 class LoginFrameController(object):
-    database = Database()
-    config = AppConfig()
-
     def __init__(self, frame=None):
         # type: (LoginFrame) -> None
+        self.config = AppConfig()
+        self.database = Database()
+
         if frame is None:
             frame = LoginFrame(None, u'登录')
         self.frame = frame
@@ -40,7 +40,7 @@ class LoginFrameController(object):
             self.remember.Value = True
             self.ip_text_field.Value = self.config.ip
             self.uid_text_field.Value = self.config.uid
-            self.pwd_text_field.Value = self.config.uid
+            self.pwd_text_field.Value = self.config.password
 
     def login(self, event):
         uid = self.uid_text_field.Value
@@ -56,11 +56,9 @@ class LoginFrameController(object):
         try:
             self.database.connect(uid, pwd, server)
         except IDATdb.ConnectionError:
-            wx.CallAfter(lambda: self.login_state.SetLabelText(u'登录失败, 请检查信息'))
-            wx.CallAfter(self.panel.Layout)
-        finally:
-            pub.sendMessage("FrameRadio", sender=self.frame, msg=FrameMessage.logged_in)
-
+            wx.CallAfter(lambda: wx.MessageBox(u'请检查登录信息', u'登录失败', wx.OK | wx.ICON_ERROR))
+        else:
+            wx.CallAfter(lambda: pub.sendMessage("FrameRadio", sender=self.frame, msg=FrameMessage.logged_in))
 
     def remember_changed(self, event):
         self.config.remember = event.Checked()
@@ -68,6 +66,5 @@ class LoginFrameController(object):
 
 if __name__ == '__main__':
     app = wx.App(False)
-    test_frame = LoginFrame(None, 'Login')
-    controller = LoginFrameController(test_frame)
+    controller = LoginFrameController()
     app.MainLoop()

@@ -4,6 +4,7 @@ import datetime
 from SelectorView import SelectorFrame
 from wx.lib.pubsub import pub
 from Radio.MessageType import FrameMessage
+from IDATdb import Database
 
 
 def _wxdate2pydate(date):
@@ -23,6 +24,8 @@ class SelectorFrameController(object):
             frame = SelectorFrame(None, u'选择用例')
         self.frame = frame
 
+        self.database = Database()
+
         self.start_date_ctrl = frame.start_date_ctrl
         self.end_date_ctrl = frame.end_date_ctrl
         self.list_box = frame.list_box
@@ -37,8 +40,8 @@ class SelectorFrameController(object):
 
     def view_loaded(self):
         # debug
-        for i in range(10):
-            self.list_box.Append('123')
+        for i, j in enumerate(sorted(list(self.database.case_set))):
+            self.list_box.Append(j)
 
     def action_bind(self):
         self.new_button.Bind(wx.EVT_BUTTON, self.add_case)
@@ -60,6 +63,8 @@ class SelectorFrameController(object):
         if renamed != '' and self.is_legal_case(renamed):
             self.list_box.Delete(sel)
             self.list_box.Insert(renamed, sel)
+        else:
+            wx.MessageBox(u'请重新输入', u'无效的测试用例', wx.OK | wx.ICON_ERROR)
 
     def delete_case(self, event):
         sel = self.list_box.GetSelection()
@@ -80,7 +85,7 @@ class SelectorFrameController(object):
         return _wxdate2pydate(self.end_date_ctrl.Value)
 
     def is_legal_case(self, case_name):
-        return True
+        return case_name in self.database.case_set
 
 if __name__ == '__main__':
     app = wx.App(False)
