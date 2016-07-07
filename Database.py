@@ -13,7 +13,7 @@ class ConnectionError(Exception):
         return repr(self.value)
 
 
-class Database(object):
+class IDATDBdatabase(object):
     connected = False
     odbc_connection = None
     data = []
@@ -37,7 +37,7 @@ class Database(object):
             raise ConnectionError
         else:
             self.connected = True
-            Database.odbc_connection = odbc_connection
+            IDATDBdatabase.odbc_connection = odbc_connection
             self.download_data()
 
     def download_data(self):
@@ -46,7 +46,7 @@ class Database(object):
         rows = cursor.execute(cmd).fetchall()
         for row in rows:
             row_data = dict(zip(['case_name', 'firmware_version', 'firmware_name', 'content', 'type', 'date'], row))
-            Database.data.append(row_data)
+            IDATDBdatabase.data.append(row_data)
             self.case_set.add(row_data['case_name'])
 
 

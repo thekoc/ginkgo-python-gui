@@ -2,6 +2,7 @@
 from DataView import DataFrame
 from MatplotlibViewController import MatplotlibPanelController
 from CheckListWithFilterViewController import CheckListWithFilterPanelController
+from Database import DataViewDatabase
 import wx
 
 
@@ -9,7 +10,8 @@ class DataFrameController(object):
     def __init__(self, frame=None):
         # type: (DataFrame) -> None
         if frame is None:
-            frame = DataFrame(None, u'1')
+            frame = DataFrame(None, u'')
+        self.database = DataViewDatabase()
         self.frame = frame
         self.graph_controller = MatplotlibPanelController(self.frame, frame.graph)
         self.firmware_list = frame.firmware_list

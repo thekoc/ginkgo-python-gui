@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*
 
-from IDATdb import Database
+from Database import IDATDBdatabase
 from LoginView import LoginFrame
 from AppData.AppConfig import AppConfig
-import IDATdb
+from Database import IDATDBdatabase
+import Database
 import wx
 from wx.lib.pubsub import pub
 from Radio.MessageType import FrameMessage
@@ -14,7 +15,7 @@ class LoginFrameController(object):
     def __init__(self, frame=None):
         # type: (LoginFrame) -> None
         self.config = AppConfig()
-        self.database = Database()
+        self.database = IDATDBdatabase()
 
         if frame is None:
             frame = LoginFrame(None, u'登录')
@@ -55,7 +56,7 @@ class LoginFrameController(object):
     def database_connect(self, uid, pwd, server):
         try:
             self.database.connect(uid, pwd, server)
-        except IDATdb.ConnectionError:
+        except Database.ConnectionError:
             wx.CallAfter(lambda: wx.MessageBox(u'请检查登录信息', u'登录失败', wx.OK | wx.ICON_ERROR))
         else:
             wx.CallAfter(lambda: pub.sendMessage("FrameRadio", sender=self.frame, msg=FrameMessage.logged_in))

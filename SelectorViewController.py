@@ -4,7 +4,7 @@ import datetime
 from SelectorView import SelectorFrame
 from wx.lib.pubsub import pub
 from Radio.MessageType import FrameMessage
-from IDATdb import Database
+from Database import IDATDBdatabase
 
 
 def _wxdate2pydate(date):
@@ -24,7 +24,7 @@ class SelectorFrameController(object):
             frame = SelectorFrame(None, u'选择用例')
         self.frame = frame
 
-        self.database = Database()
+        self.database = IDATDBdatabase()
 
         self.start_date_ctrl = frame.start_date_ctrl
         self.end_date_ctrl = frame.end_date_ctrl
