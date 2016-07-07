@@ -2,6 +2,8 @@
 import wx
 import datetime
 from SelectorView import SelectorFrame
+from wx.lib.pubsub import pub
+from Radio.MessageType import FrameMessage
 
 
 def _wxdate2pydate(date):
@@ -14,7 +16,7 @@ def _wxdate2pydate(date):
         return None
 
 
-class SelectorViewController(object):
+class SelectorFrameController(object):
     def __init__(self, frame=None):
         # type: (SelectorFrame) -> None
         if frame is None:
@@ -69,7 +71,7 @@ class SelectorViewController(object):
         self.list_box.Clear()
 
     def inquire(self, event):
-        pass
+        pub.sendMessage('FrameRadio', sender=self.frame, msg=FrameMessage.inquire)
 
     def get_start_date(self):
         return _wxdate2pydate(self.start_date_ctrl.Value)
@@ -83,5 +85,5 @@ class SelectorViewController(object):
 if __name__ == '__main__':
     app = wx.App(False)
     test_frame = SelectorFrame(None, 'Selector')
-    con = SelectorViewController(test_frame)
+    con = SelectorFrameController(test_frame)
     app.MainLoop()
