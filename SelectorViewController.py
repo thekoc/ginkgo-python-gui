@@ -81,7 +81,7 @@ class SelectorFrameController(object):
         data = dict()
         data['date'] = (self.get_start_date(), self.get_end_date())
         data['case_set'] = set(self.list_box.GetItems())
-        pub.sendMessage(Channel.fmRadio, sender=self.frame, msg=FrameMessage.inquire,
+        pub.sendMessage(Channel.fmFrame, sender=self.frame, msg=FrameMessage.inquire,
                         data=data)
 
     def get_start_date(self):

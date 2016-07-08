@@ -23,7 +23,7 @@ class AppController(object):
         self.app.MainLoop()
 
     def subscribe(self):
-        pub.subscribe(self.frame_manager, Channel.fmRadio)
+        pub.subscribe(self.frame_manager, Channel.fmFrame)
 
     def frame_manager(self, sender, msg, data=None):
         if msg == FrameMessage.logged_in:

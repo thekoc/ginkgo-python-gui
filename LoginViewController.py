@@ -60,7 +60,7 @@ class LoginFrameController(object):
         except Database.ConnectionError:
             wx.CallAfter(lambda: wx.MessageBox(u'请检查登录信息', u'登录失败', wx.OK | wx.ICON_ERROR))
         else:
-            wx.CallAfter(lambda: pub.sendMessage(Channel.fmRadio, sender=self.frame, msg=FrameMessage.logged_in))
+            wx.CallAfter(lambda: pub.sendMessage(Channel.fmFrame, sender=self.frame, msg=FrameMessage.logged_in))
 
     def remember_changed(self, event):
         self.config.remember = event.Checked()
