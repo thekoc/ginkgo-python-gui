@@ -86,6 +86,14 @@ class CheckListWithFilterPanelController(object):
                     self.list_ctrl.SetStringItem(index, no, item)
                     self.list_ctrl.SetStringItem(index, no, item)
 
+    def get_checked_item_text(self):
+        num = self.list_ctrl.GetItemCount()
+        items = []
+        for i in range(num):
+            if self.list_ctrl.IsChecked(i):
+                items.append(self.list_ctrl.GetItemText(i))
+        return items
+
     def set_custom_button_label(self, label):
         self.custom_button.LabelText = label
 

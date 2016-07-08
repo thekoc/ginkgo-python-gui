@@ -24,9 +24,9 @@ class DataFrame(wx.Frame):
         plot_type_label = wx.StaticText(option_panel, label=u'图像类型')
         option_box.Add(plot_type_label, 0, wx.ALIGN_CENTRE | wx.BOTTOM, 10)
 
-        pan_option = wx.RadioButton(option_panel, label=u'饼状图', style=wx.RB_GROUP)
-        bar_option = wx.RadioButton(option_panel, label=u'柱状图')
-        line_option = wx.RadioButton(option_panel, label=u'折线图')
+        self.pan_option = pan_option = wx.RadioButton(option_panel, label=u'饼状图', style=wx.RB_GROUP)
+        self.bar_option = bar_option = wx.RadioButton(option_panel, label=u'柱状图')
+        self.line_option = line_option = wx.RadioButton(option_panel, label=u'折线图')
         option_box.AddMany([(i, 0, wx.TOP) for i in [pan_option, bar_option, line_option]])
 
         option_box.AddSpacer(20)
@@ -34,9 +34,11 @@ class DataFrame(wx.Frame):
         classify_type_label = wx.StaticText(option_panel, label=u'分类方式')
         option_box.Add(classify_type_label, 0, wx.ALIGN_CENTRE | wx.BOTTOM, 10)
 
-        firmware_option = wx.RadioButton(option_panel, label=u'版本号', style=wx.RB_GROUP)
-        case_option = wx.RadioButton(option_panel, label=u'测试用例')
+        self.firmware_option = firmware_option = wx.RadioButton(option_panel, label=u'版本号', style=wx.RB_GROUP)
+        self.case_option = case_option = wx.RadioButton(option_panel, label=u'测试用例')
         option_box.AddMany([(i, 0, wx.TOP) for i in [firmware_option, case_option]])
+
+        self.option_list = [pan_option, bar_option, line_option, firmware_option, case_option]
 
         option_panel.SetSizerAndFit(option_box)
         option_box.Layout()
@@ -56,4 +58,3 @@ if __name__ == '__main__':
     app = wx.App()
     frame = DataFrame(None, 'DataView')
     app.MainLoop()
-

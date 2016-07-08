@@ -6,6 +6,9 @@ from Database import DataViewDatabase
 import wx
 import sys
 from wx.lib.mixins.listctrl import ListCtrlAutoWidthMixin
+from wx.lib.pubsub import pub
+from Radio.Radio import Channel
+from Radio.MessageType import GraphMessage
 
 
 class AutoWidthListCtrl(wx.ListCtrl, ListCtrlAutoWidthMixin):
@@ -48,6 +51,20 @@ class DataFrameController(object):
         self.firmware_controller.insert_column(1, u'测试用例数')
         self.firmware_controller.insert_column(2, u'总数')
 
+        self.action_bind()
+        self.set_default_option_button()
+
+    def action_bind(self):
+        map(lambda x: x.Bind(wx.EVT_RADIOBUTTON, self.radio_button_changed), self.frame.option_list)
+
+    def radio_button_changed(self, event):
+        self.plot_data()
+
+    def set_default_option_button(self):
+        self.frame.pan_option.Value = True
+        self.frame.firmware_option.Value = True
+        self.plot_data()
+
     def set_start_data(self, post_data):
         self.database.set_available_data(post_data)
         content_rows = self.database.get_list_content()
@@ -73,8 +90,13 @@ class DataFrameController(object):
         new_frame.Fit()
         new_frame.Show()
 
-    def plot_data(self):
+    def get_option(self):
+        return [i.GetLabel() for i in filter(lambda x: x.Value, self.frame.option_list)]
 
+    def plot_data(self):
+        data = self.database.get_available_data_from_database()
+        option = self.get_option()
+        pub.sendMessage(Channel.fmGraph, msg=GraphMessage.plot, data=data, option=option)
 
 
 

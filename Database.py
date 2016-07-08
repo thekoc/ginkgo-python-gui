@@ -53,10 +53,13 @@ class DataViewDatabase(object):
     def __init__(self):
         self.database = IDATDBdatabase()
         self.available_data = None
+        self.list_data = None
 
     def set_available_data(self, post_data):
+        # type: (dict) -> dict[str, list[dict]]
         filter_data = filter(lambda x: post_data['date'][0] <= x['date'] <= post_data['date'][1], self.database.data)
         filter_data = filter(lambda x: x['case_name'] in post_data['case_set'], filter_data)
+        self.list_data = filter_data
         available_data = {}
         for i in filter_data:
             if available_data.get(i['firmware_name']) is None:
@@ -74,4 +77,12 @@ class DataViewDatabase(object):
             content_rows.append((firm_name, str(len(set([j['case_name'] for j in value]))), str(len(value))))
         return content_rows
 
+    def get_available_data_from_database(self):
+        # type: () -> list[dict]
+        return self.list_data
+
+
+class GraphDatabase(object):
+    def __init__(self):
+        pass
 
