@@ -4,6 +4,7 @@ import datetime
 from SelectorView import SelectorFrame
 from wx.lib.pubsub import pub
 from Radio.MessageType import FrameMessage
+from Radio.Radio import Channel
 from Database import IDATDBdatabase
 
 
@@ -80,7 +81,7 @@ class SelectorFrameController(object):
         data = dict()
         data['date'] = (self.get_start_date(), self.get_end_date())
         data['case_set'] = set(self.list_box.GetItems())
-        pub.sendMessage('FrameRadio', sender=self.frame, msg=FrameMessage.inquire,
+        pub.sendMessage(Channel.fmRadio, sender=self.frame, msg=FrameMessage.inquire,
                         data=data)
 
     def get_start_date(self):

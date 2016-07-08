@@ -3,6 +3,7 @@ from LoginViewController import LoginFrameController
 from SelectorViewController import SelectorFrameController
 from DataViewController import DataFrameController
 from Radio.MessageType import FrameMessage
+from Radio.Radio import Channel
 import wx
 
 
@@ -22,7 +23,7 @@ class AppController(object):
         self.app.MainLoop()
 
     def subscribe(self):
-        pub.subscribe(self.frame_manager, 'FrameRadio')
+        pub.subscribe(self.frame_manager, Channel.fmRadio)
 
     def frame_manager(self, sender, msg, data=None):
         if msg == FrameMessage.logged_in:
