@@ -20,6 +20,7 @@ class CheckListWithFilterPanelController(object):
         self.custom_button = panel.custom_button
         self.filter_button = panel.filter_button
         self.filter_text_ctrl = panel.filter_text_ctrl
+        self.select_index = 0
 
         self.view_loaded()
         self.action_bind()
@@ -33,6 +34,12 @@ class CheckListWithFilterPanelController(object):
         self.reverse_select_button.Bind(wx.EVT_BUTTON, self.reverse_select)
         self.list_ctrl.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.double_click)
         self.list_ctrl.Bind(wx.EVT_LIST_COL_CLICK, self.column_click)
+
+    def get_selected_index(self):
+        return self.panel.list_ctrl.GetFirstSelected()
+
+    def get_selected_item_text(self):
+        return self.panel.list_ctrl.GetItemText(self.get_selected_index())
 
     def select_all(self, event):
         num = self.list_ctrl.GetItemCount()
@@ -78,6 +85,12 @@ class CheckListWithFilterPanelController(object):
                 else:
                     self.list_ctrl.SetStringItem(index, no, item)
                     self.list_ctrl.SetStringItem(index, no, item)
+
+    def set_custom_button_label(self, label):
+        self.custom_button.LabelText = label
+
+    def set_custom_function(self, func):
+        self.custom_button.Bind(wx.EVT_BUTTON, func)
 
 if __name__ == '__main__':
     app = wx.App(False)
