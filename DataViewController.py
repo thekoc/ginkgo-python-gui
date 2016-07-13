@@ -64,13 +64,13 @@ class DataFrameController(object):
     def set_default_option_button(self):
         self.frame.pan_option.Value = True
         self.frame.firmware_option.Value = True
-        self.plot_data()
 
     def set_start_data(self, post_data):
         self.database.set_available_data(post_data)
         content_rows = self.database.get_list_content()
         for i, row in enumerate(content_rows):
             self.firmware_controller.insert_row(i, row)
+        self.plot_data()
 
     def more(self, event):
         if self.firmware_controller.get_selected_index() != -1:
