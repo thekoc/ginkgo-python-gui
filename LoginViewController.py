@@ -62,6 +62,7 @@ class LoginFrameController(object):
         else:
             wx.CallAfter(lambda: pub.sendMessage(Channel.fmFrame, sender=self.frame, msg=FrameMessage.logged_in))
 
+
     def remember_changed(self, event):
         self.config.remember = event.Checked()
 

@@ -45,6 +45,7 @@ class DataFrameController(object):
         self.graph_controller = MatplotlibPanelController(self.frame, frame.graph)
         self.firmware_list_panel = frame.firmware_list
         self.firmware_controller = CheckListWithFilterPanelController(self.frame, self.firmware_list_panel)
+
         self.firmware_controller.set_custom_button_label(u'查看详情')
         self.firmware_controller.set_custom_function(self.more)
         self.firmware_controller.insert_column(0, u'固件号')
