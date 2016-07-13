@@ -2,7 +2,6 @@
 
 import pyodbc
 import platform
-import datetime
 import pickle
 
 
@@ -63,7 +62,7 @@ class DataViewDatabase(object):
         # type: (dict) -> dict[str, list[dict]]
         filter_data = filter(lambda x: post_data['date'][0] <= x['date'] <= post_data['date'][1], self.database.data)
         filter_data = filter(lambda x: x['case_name'] in post_data['case_set'], filter_data)
-        self.list_data = filter_data
+        self.list_data = list(filter_data)
         available_data = {}
         for i in filter_data:
             if available_data.get(i['firmware_name']) is None:
