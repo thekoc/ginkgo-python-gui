@@ -28,8 +28,8 @@ class CheckListWithFilterPanelController(object):
         self.select_all_button = panel.select_all_button
         self.deselect_all_button = panel.deselect_all_button
         self.reverse_select_button = panel.reverse_select_button
-        self.custom_button = panel.custom_button
-        self.apply_button = panel.filter_button
+        self.custom_button1 = panel.custom_button1
+        self.custom_button2 = panel.custom_button2
         self.filter_text_ctrl = panel.filter_text_ctrl
         self.select_index = 0
 
@@ -45,7 +45,6 @@ class CheckListWithFilterPanelController(object):
         self.select_all_button.Bind(wx.EVT_BUTTON, self.select_all)
         self.deselect_all_button.Bind(wx.EVT_BUTTON, self.deselect_all)
         self.reverse_select_button.Bind(wx.EVT_BUTTON, self.reverse_select)
-        self.apply_button.Bind(wx.EVT_BUTTON, self.apply)
 
         self.filter_text_ctrl.Bind(wx.EVT_TEXT, self.filter)
 
@@ -111,7 +110,7 @@ class CheckListWithFilterPanelController(object):
 
     def get_checked_item_text(self):
         """
-        Get checked item in a list
+        Get checked items as a list
         """
         num = self.list_ctrl.GetItemCount()
         items = []
@@ -120,11 +119,17 @@ class CheckListWithFilterPanelController(object):
                 items.append(self.list_ctrl.GetItemText(i))
         return items
 
-    def set_custom_button_label(self, label):
-        self.custom_button.LabelText = label
+    def set_custom_button_label1(self, label):
+        self.custom_button1.LabelText = label
 
-    def set_custom_function(self, func):
-        self.custom_button.Bind(wx.EVT_BUTTON, func)
+    def set_custom_function1(self, func):
+        self.custom_button1.Bind(wx.EVT_BUTTON, func)
+
+    def set_custom_button_label2(self, label):
+        self.custom_button2.LabelText = label
+
+    def set_custom_function2(self, func):
+        self.custom_button2.Bind(wx.EVT_BUTTON, func)
 
 if __name__ == '__main__':
     app = wx.App(False)

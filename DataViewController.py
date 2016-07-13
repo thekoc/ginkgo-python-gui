@@ -46,11 +46,7 @@ class DataFrameController(object):
         self.firmware_list_panel = frame.firmware_list
         self.firmware_controller = CheckListWithFilterPanelController(self.frame, self.firmware_list_panel)
 
-        self.firmware_controller.set_custom_button_label(u'查看详情')
-        self.firmware_controller.set_custom_function(self.more)
-        self.firmware_controller.insert_column(0, u'固件号')
-        self.firmware_controller.insert_column(1, u'测试用例数')
-        self.firmware_controller.insert_column(2, u'总数')
+        self.set_firmware()
 
         self.action_bind()
         self.set_default_option_button()
@@ -58,7 +54,20 @@ class DataFrameController(object):
     def action_bind(self):
         map(lambda x: x.Bind(wx.EVT_RADIOBUTTON, self.radio_button_changed), self.frame.option_list)
 
+    def set_firmware(self):
+        self.firmware_controller.set_custom_button_label1(u'查看详情')
+        self.firmware_controller.set_custom_function1(self.more)
+        self.firmware_controller.set_custom_button_label2(u'更新图像')
+        self.firmware_controller.set_custom_function2(self.update_graph)
+
+        self.firmware_controller.insert_column(0, u'固件号')
+        self.firmware_controller.insert_column(1, u'测试用例数')
+        self.firmware_controller.insert_column(2, u'总数')
+
     def radio_button_changed(self, event):
+        self.plot_data()
+
+    def update_graph(self, event):
         self.plot_data()
 
     def set_default_option_button(self):
