@@ -3,6 +3,7 @@
 import pyodbc
 import platform
 import datetime
+import pickle
 
 
 class ConnectionError(Exception):
@@ -29,8 +30,9 @@ class IDATDBdatabase(object):
 
     def connect(self, uid, pwd, server):
         try:
-            odbc_connection = pyodbc.connect('DRIVER=%s;SERVER=%s;PORT=%d;DATABASE=%s;UID=%s;PWD=%s' %\
-                                         (self.driver, server, self.port, self.database_name, uid, pwd))
+            # odbc_connection = pyodbc.connect('DRIVER=%s;SERVER=%s;PORT=%d;DATABASE=%s;UID=%s;PWD=%s' %\
+            #                              (self.driver, server, self.port, self.database_name, uid, pwd))
+            odbc_connection = None
         except pyodbc.Error:
             raise ConnectionError
         else:
@@ -39,9 +41,11 @@ class IDATDBdatabase(object):
             self.download_data()
 
     def download_data(self):
-        cmd = "select b.Name as CaseName, d.FileVersion as FirmwareVersion, d.Name as FirmwareName, e.Content, e.Type, e.InsertDate from tbTaskRunCS a, tbAutoTestCS b, tbTaskNeedFirmware c, tbBinaryFile d, tbTaskResult e, tbAutoTestTask f where a.AutoTestCSID = b.ID and e.AutoTestCSID = b.ID and c.FirmwareFileID = d.ID and c.AutoTestTaskID = f.ID and e.AutoTestTaskID = f.ID and a.AutoTestTaskID = f.ID"
-        cursor = self.odbc_connection.cursor()
-        rows = cursor.execute(cmd).fetchall()
+        # cmd = "select b.Name as CaseName, d.FileVersion as FirmwareVersion, d.Name as FirmwareName, e.Content, e.Type, e.InsertDate from tbTaskRunCS a, tbAutoTestCS b, tbTaskNeedFirmware c, tbBinaryFile d, tbTaskResult e, tbAutoTestTask f where a.AutoTestCSID = b.ID and e.AutoTestCSID = b.ID and c.FirmwareFileID = d.ID and c.AutoTestTaskID = f.ID and e.AutoTestTaskID = f.ID and a.AutoTestTaskID = f.ID"
+        # cursor = self.odbc_connection.cursor()
+        # rows = cursor.execute(cmd).fetchall()
+        with open('data.pickle', 'rb') as f:
+            rows = pickle.load(f)
         for row in rows:
             row[-1] = row[-1].date()
             row_data = dict(zip(['case_name', 'firmware_version', 'firmware_name', 'content', 'type', 'date'], row))
