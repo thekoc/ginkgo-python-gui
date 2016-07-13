@@ -12,6 +12,10 @@ class CheckListCtrl(wx.ListCtrl, CheckListCtrlMixin, ListCtrlAutoWidthMixin):
 
 
 class CheckListWithFilterPanel(wx.Panel):
+    """
+    Panel that contains a checklist and a filter text ctrl with two customizable button.
+    The two button can be achieved by .custom_button1 and .custom_button2.
+    """
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
         self.column = 0

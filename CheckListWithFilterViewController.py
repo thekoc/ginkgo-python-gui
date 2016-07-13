@@ -8,7 +8,17 @@ fake_data = [('android', '121'), ('ios', '34'), ('windows', '334'), ('linux', '4
 
 
 class CheckListWithFilterPanelController(object):
+    """
+    Controller of the panel.
+    Bind your own function on two customizable button by .set_custom_function1 and 2.
+    Set label of two button by .set_custom_button_label1 and 2
 
+    Use .insert_column(column, title) to insert a column
+    Use .insert_row(row, items) to insert a row
+
+    Use .get_selected_text() to get selected text (not checked text)
+    Use .get_checked_text() to get the latter
+    """
     def __init__(self, parent, panel=None):
         # type: (wx.Frame | wx.Panel, CheckListWithFilterView.CheckListWithFilterPanel) -> None
         if panel is None:
