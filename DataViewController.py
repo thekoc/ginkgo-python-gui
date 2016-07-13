@@ -93,7 +93,7 @@ class DataFrameController(object):
             new_frame.Show()
 
     def get_option(self):
-        return [i.GetLabel() for i in filter(lambda x: x.Value, self.frame.option_list)]
+        return [i.GetLabel() for i in self.frame.option_list if i.Value]
 
     def plot_data(self):
         data = self.database.get_available_data_from_database()
@@ -101,9 +101,7 @@ class DataFrameController(object):
         pub.sendMessage(Channel.fmGraph, msg=GraphMessage.plot, data=data, option=option)
 
 
-
 if __name__ == '__main__':
     app = wx.App()
     controller = DataFrameController()
     app.MainLoop()
-

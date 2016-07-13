@@ -40,7 +40,7 @@ class LoginFrame(wx.Frame):
         pwd_box.Add(pwd_text_field, 4, wx.ALIGN_CENTER_VERTICAL)
 
         # ======== space ========
-        main_box.AddMany([(i, 1, wx.EXPAND | wx.ALL, 6) for i in [ip_box, uid_box, pwd_box]])
+        main_box.AddMany((i, 1, wx.EXPAND | wx.ALL, 6) for i in [ip_box, uid_box, pwd_box])
         main_box.AddStretchSpacer(prop=0.1)
 
         # ======== login box ========
