@@ -97,6 +97,7 @@ class DataFrameController(object):
 
     def plot_data(self):
         data = self.database.get_available_data_from_database()
+        data = [i for i in data if i['firmware_name'] in self.firmware_controller.get_checked_item_text()]
         option = self.get_option()
         pub.sendMessage(Channel.fmGraph, msg=GraphMessage.plot, data=data, option=option)
 
