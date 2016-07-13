@@ -73,23 +73,24 @@ class DataFrameController(object):
             self.firmware_controller.insert_row(i, row)
 
     def more(self, event):
-        firmware_name = self.firmware_controller.get_selected_item_text()
-        firmware_data = self.database.available_data[firmware_name]
-        new_frame = wx.Frame(self.frame, title='more')
-        list_ctrl = AutoWidthListCtrl(new_frame)
-        list_ctrl.insert_column(0, u'固件')
-        list_ctrl.insert_column(1, u'固件版本')
-        list_ctrl.insert_column(2, u'时间')
-        list_ctrl.insert_column(3, u'测试用例')
-        list_ctrl.insert_column(4, u'结果')
-        list_ctrl.insert_column(5, u'内容')
+        if self.firmware_controller.get_selected_index() != -1:
+            firmware_name = self.firmware_controller.get_selected_item_text()
+            firmware_data = self.database.available_data[firmware_name]
+            new_frame = wx.Frame(self.frame, title='more')
+            list_ctrl = AutoWidthListCtrl(new_frame)
+            list_ctrl.insert_column(0, u'固件')
+            list_ctrl.insert_column(1, u'固件版本')
+            list_ctrl.insert_column(2, u'时间')
+            list_ctrl.insert_column(3, u'测试用例')
+            list_ctrl.insert_column(4, u'结果')
+            list_ctrl.insert_column(5, u'内容')
 
-        for i, d in enumerate(firmware_data):
-            list_ctrl.insert_row(i, (d['firmware_name'], d['firmware_version'],
-                                     str(d['date']), d['case_name'], str(d['type']), d['content']))
+            for i, d in enumerate(firmware_data):
+                list_ctrl.insert_row(i, (d['firmware_name'], d['firmware_version'],
+                                         str(d['date']), d['case_name'], str(d['type']), d['content']))
 
-        new_frame.Fit()
-        new_frame.Show()
+            new_frame.Fit()
+            new_frame.Show()
 
     def get_option(self):
         return [i.GetLabel() for i in filter(lambda x: x.Value, self.frame.option_list)]
