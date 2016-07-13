@@ -82,6 +82,15 @@ class DataViewDatabase(object):
         return self.list_data
 
 
+class FilterListDatabase(object):
+    def __init__(self):
+        self.row_items = []
+
+    def insert_row(self, row, items):
+        if items not in self.row_items:
+            self.row_items.insert(row, items)
+
+
 class GraphDatabase(object):
     def __init__(self):
         pass

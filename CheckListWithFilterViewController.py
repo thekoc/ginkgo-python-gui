@@ -2,6 +2,7 @@
 import wx
 import sys
 from CheckListWithFilterView import CheckListWithFilterPanel
+from Database import FilterListDatabase
 
 fake_data = [('android', '121'), ('ios', '34'), ('windows', '334'), ('linux', '41')]
 
@@ -22,6 +23,8 @@ class CheckListWithFilterPanelController(object):
         self.filter_text_ctrl = panel.filter_text_ctrl
         self.select_index = 0
 
+        self.database = FilterListDatabase()
+
         self.view_loaded()
         self.action_bind()
 
@@ -32,6 +35,7 @@ class CheckListWithFilterPanelController(object):
         self.select_all_button.Bind(wx.EVT_BUTTON, self.select_all)
         self.deselect_all_button.Bind(wx.EVT_BUTTON, self.deselect_all)
         self.reverse_select_button.Bind(wx.EVT_BUTTON, self.reverse_select)
+        self.filter_button.Bind(wx.EVT_BUTTON, self.filter)
         self.list_ctrl.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.double_click)
         self.list_ctrl.Bind(wx.EVT_LIST_COL_CLICK, self.column_click)
 
@@ -59,9 +63,11 @@ class CheckListWithFilterPanelController(object):
     def filter(self, event):
         text = self.filter_text_ctrl.Value
         num = self.list_ctrl.GetItemCount()
-        for i in range(num):
-            if text in self.list_ctrl.GetItemText(i):
-                pass
+        self.list_ctrl.DeleteAllItems()
+        row_items = self.database.row_items
+        for items in row_items:
+            if text in items[0]:
+                self.insert_row(sys.maxint, items)
 
     def double_click(self, event):
         pass
@@ -75,6 +81,7 @@ class CheckListWithFilterPanelController(object):
         self.list_ctrl.InsertColumn(column, title, width=-1)
 
     def insert_row(self, row, items):
+        self.database.insert_row(row, items)
         if len(items) != self.panel.column:
             raise ValueError('Wrong Dimensionality')
         else:
