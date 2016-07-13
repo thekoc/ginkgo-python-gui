@@ -19,7 +19,7 @@ class CheckListWithFilterPanelController(object):
         self.deselect_all_button = panel.deselect_all_button
         self.reverse_select_button = panel.reverse_select_button
         self.custom_button = panel.custom_button
-        self.filter_button = panel.filter_button
+        self.apply_button = panel.filter_button
         self.filter_text_ctrl = panel.filter_text_ctrl
         self.select_index = 0
 
@@ -35,7 +35,10 @@ class CheckListWithFilterPanelController(object):
         self.select_all_button.Bind(wx.EVT_BUTTON, self.select_all)
         self.deselect_all_button.Bind(wx.EVT_BUTTON, self.deselect_all)
         self.reverse_select_button.Bind(wx.EVT_BUTTON, self.reverse_select)
-        self.filter_button.Bind(wx.EVT_BUTTON, self.filter)
+        self.apply_button.Bind(wx.EVT_BUTTON, self.apply)
+
+        self.filter_text_ctrl.Bind(wx.EVT_TEXT, self.filter)
+
         self.list_ctrl.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.double_click)
         self.list_ctrl.Bind(wx.EVT_LIST_COL_CLICK, self.column_click)
 
@@ -61,13 +64,16 @@ class CheckListWithFilterPanelController(object):
             self.list_ctrl.CheckItem(i, not self.list_ctrl.IsChecked(i))
 
     def filter(self, event):
-        text = self.filter_text_ctrl.Value
+        text = self.filter_text_ctrl.Value.lower()
         num = self.list_ctrl.GetItemCount()
         self.list_ctrl.DeleteAllItems()
-        row_items = self.database.row_items
+        row_items = [i.lower() for i in self.database.row_items]
         for items in row_items:
             if text in items[0]:
                 self.insert_row(sys.maxint, items)
+
+    def apply(self, event):
+        pass
 
     def double_click(self, event):
         pass
@@ -94,6 +100,9 @@ class CheckListWithFilterPanelController(object):
                     self.list_ctrl.SetStringItem(index, no, item)
 
     def get_checked_item_text(self):
+        """
+        Get checked item in a list
+        """
         num = self.list_ctrl.GetItemCount()
         items = []
         for i in range(num):
