@@ -46,6 +46,8 @@ class IDATDBdatabase(object):
         with open('data.pickle', 'rb') as f:
             rows = pickle.load(f)
         for row in rows:
+            if row[-2] not in [7, 8, 11, 12, 14, 15]:
+                continue
             row[-1] = row[-1].date()
             row_data = dict(zip(['case_name', 'firmware_version', 'firmware_name', 'content', 'type', 'date'], row))
             IDATDBdatabase.data.append(row_data)
