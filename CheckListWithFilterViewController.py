@@ -18,6 +18,8 @@ class CheckListWithFilterPanelController(object):
 
     Use .get_selected_text() to get selected text (not checked text)
     Use .get_checked_text() to get the latter
+
+    Use .get_display_items() to get items list on the display and use .set_display_items() to set
     """
     def __init__(self, parent, panel=None):
         # type: (wx.Frame | wx.Panel, CheckListWithFilterView.CheckListWithFilterPanel) -> None
@@ -74,12 +76,9 @@ class CheckListWithFilterPanelController(object):
 
     def filter(self, event):
         text = self.filter_text_ctrl.Value.lower()
-        num = self.list_ctrl.GetItemCount()
         self.list_ctrl.DeleteAllItems()
-        row_items = [i.lower() for i in self.database.row_items]
-        for items in row_items:
-            if text in items[0]:
-                self.insert_row(sys.maxint, items)
+        row_items = [[line.lower() for line in row] for row in self.database.row_items]
+        self.set_display_items(items for items in row_items if text in items[0])
 
     def apply(self, event):
         pass
@@ -88,25 +87,28 @@ class CheckListWithFilterPanelController(object):
         pass
 
     def column_click(self, event):
-        pass
+        """sort the row depends on column clicked"""
+        c = event.GetColumn()
+        self.set_display_items(sorted(self.get_display_items(), key=lambda x: float(x[c]) if x[c].isdigit() else x[c]))
 
     def insert_column(self, column, title):
         # type: (int, basestring) -> None
         self.panel.column += 1
         self.list_ctrl.InsertColumn(column, title, width=-1)
 
-    def insert_row(self, row, items):
-        self.database.insert_row(row, items)
+    def insert_row(self, row, items, display=True):
         if len(items) != self.panel.column:
             raise ValueError('Wrong Dimensionality')
         else:
-            index = 0
-            for no, item in enumerate(items):
-                if no == 0:
-                    index = self.list_ctrl.InsertStringItem(row, item)
-                else:
-                    self.list_ctrl.SetStringItem(index, no, item)
-                    self.list_ctrl.SetStringItem(index, no, item)
+            self.database.insert_row(row, items)
+            if display:
+                index = 0
+                for no, item in enumerate(items):
+                    if no == 0:
+                        index = self.list_ctrl.InsertStringItem(row, item)
+                    else:
+                        self.list_ctrl.SetStringItem(index, no, item)
+                        self.list_ctrl.SetStringItem(index, no, item)
 
     def get_checked_item_text(self):
         """
@@ -118,6 +120,17 @@ class CheckListWithFilterPanelController(object):
             if self.list_ctrl.IsChecked(i):
                 items.append(self.list_ctrl.GetItemText(i))
         return items
+
+    def get_display_items(self):
+        num = self.list_ctrl.GetItemCount()
+        return [[self.list_ctrl.GetItemText(i, j) for j in range(self.panel.column)] for i in range(num)]
+
+    def set_display_items(self, row_items=None):
+        self.list_ctrl.DeleteAllItems()
+        if row_items is None:
+            row_items = self.database.row_items
+        for items in row_items:
+            self.insert_row(sys.maxint, items)
 
     def set_custom_button_label1(self, label):
         self.custom_button1.LabelText = label
@@ -137,7 +150,7 @@ if __name__ == '__main__':
     C = CheckListWithFilterPanelController(frame)
     C.insert_column(0, 'Firmware')
     C.insert_column(1, 'Amount')
-    for i in fake_data:
-        C.insert_row(sys.maxint, i)
+    for z in fake_data:
+        C.insert_row(sys.maxint, z)
     frame.Show()
     app.MainLoop()
