@@ -15,16 +15,17 @@ class MatplotlibPanel(wx.Panel):
         self.canvas = FigureCanvas(self, -1, self.figure)
         self.sizer = wx.BoxSizer(wx.VERTICAL)
         self.sizer.Add(self.canvas, 1, wx.LEFT | wx.TOP | wx.GROW)
-        self.add_toolbar()
+        self.toolbar = self.add_toolbar()
 
         self.SetSizer(self.sizer)
         self.Fit()
 
     def add_toolbar(self):
-        self.toolbar = NavigationToolbar2Wx(self.canvas)
-        self.toolbar.Realize()
-        self.sizer.Add(self.toolbar, 0, wx.ALIGN_CENTER | wx.EXPAND)
-        self.toolbar.update()
+        toolbar = NavigationToolbar2Wx(self.canvas)
+        toolbar.Realize()
+        self.sizer.Add(toolbar, 0, wx.ALIGN_CENTER | wx.EXPAND)
+        toolbar.update()
+        return toolbar
 
 if __name__ == '__main__':
     app = wx.App()
