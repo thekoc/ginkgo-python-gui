@@ -2,3 +2,4 @@
 test.py
 app.cfg
 *.pickle
+*.pyc

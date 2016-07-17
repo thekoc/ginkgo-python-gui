@@ -42,7 +42,7 @@ class SelectorFrameController(object):
     def view_loaded(self):
         # debug
         for i, j in enumerate(sorted(list(self.database.case_set))):
-            if i < 1:
+            if i < 20:
                 self.list_box.Append(j)
 
     def action_bind(self):
