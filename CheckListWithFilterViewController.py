@@ -137,6 +137,7 @@ class CheckListWithFilterPanelController(object):
 
     def set_custom_function1(self, func):
         self.custom_button1.Bind(wx.EVT_BUTTON, func)
+        self.list_ctrl.Bind(wx.EVT_LIST_ITEM_ACTIVATED, func)
 
     def set_custom_button_label2(self, label):
         self.custom_button2.LabelText = label

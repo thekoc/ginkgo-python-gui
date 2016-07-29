@@ -2,13 +2,15 @@
 from __future__ import division
 from MatplotlibView import MatplotlibPanel
 import numpy as np
-import wx
 from wx.lib.pubsub import pub
 from Radio.Radio import Channel
 from Radio.MessageType import GraphMessage
 from matplotlib.dates import date2num
 import datetime
-import random
+from mpl_toolkits.mplot3d import Axes3D
+import matplotlib.cm as cmx
+import matplotlib.colors as colors
+
 
 
 def _monthdelta(date, delta):
@@ -64,7 +66,7 @@ class MatplotlibPanelController(object):
         if option[0] == u'饼状图':
             self.plot_pie_graph(classified_data, feature)
         elif option[0] == u'柱状图':
-            pass
+            self.plot_bar_graph(classified_data, feature)
         elif option[0] == u'折线图':
             self.plot_line_graph(classified_data, feature)
         else:
@@ -77,6 +79,8 @@ class MatplotlibPanelController(object):
         return [[i for i in data if i[feature] == kind] for kind in feature_list]
 
     def plot_pie_graph(self, classified_data, feature):
+        self.figure.delaxes(self.axes)
+        self.axes = self.figure.add_subplot(111)
         self.figure.patch.set_facecolor('white')
         self.axes.clear()
         self.axes.set_aspect(1)
@@ -124,28 +128,90 @@ class MatplotlibPanelController(object):
         return plot_data_dict
 
     def plot_line_graph(self, classified_data, feature):
-        self.figure.patch.set_facecolor('white')
-        self.axes.clear()
-        self.axes.set_aspect('auto')
         success = [7, 11, 14]
         fail = [8, 12, 15]
+        self.figure.delaxes(self.axes)
+        self.axes = self.figure.add_subplot(111)
+        self.axes.clear()
 
         for data in classified_data:
             plot_data_dict = self._divide_into_interval(data)
+            success_dict = {}
             for key in plot_data_dict:
                 items = plot_data_dict[key]
-                plot_data_dict[key] = sum(1 for i in items if i['type'] in success) / len(items)
-                assert isinstance(plot_data_dict[key], float)
+                success_dict[key] = sum(1 for i in items if i['type'] in success) / len(items)
+                assert isinstance(success_dict[key], float)
 
-            plot_items = sorted(plot_data_dict.items(), key=lambda x: x[0][0])
+            plot_items = sorted(success_dict.items(), key=lambda x: x[0][0])
             xx = [date2num(i[0][0]) for i in plot_items]
             yy = [i[1] for i in plot_items]
-            self.axes.plot_date(xx, yy, '-')
+            self.axes.plot_date(xx, yy, fmt='-', label=data[0][feature])
 
+        self.axes.set_ylabel('success rate')
+        self.axes.legend(fontsize=10).get_frame().set_alpha(0.5)
+        self.figure.patch.set_facecolor('white')
+        self.axes.set_aspect('auto')
         self.axes.autoscale_view()
         self.axes.grid(True)
         self.figure.autofmt_xdate()
 
         self.canvas.draw()
 
+    def plot_bar_graph(self, classified_data, feature):
+        self.figure.delaxes(self.axes)
+        self.axes = self.figure.add_subplot(111, projection='3d')
+        success = [7, 11, 14]
+        fail = [8, 12, 15]
+        y_index = 0
+        z_limits = [-1, 1]
+        num = len(classified_data) * 2
+        cm = self.get_cmap(num)
+        for j, data in enumerate(classified_data):
+            success_dict = {}
+            fail_dict = {}
+            plot_data_dict = self._divide_into_interval(data)
+            for key in plot_data_dict:
+                success_dict[key] = sum(1 for i in plot_data_dict[key] if i['type'] in success)
+                fail_dict[key] = sum(-1 for i in plot_data_dict[key] if i['type'] in fail)
+            success_items = sorted(success_dict.items(), key=lambda x: x[0][0])
+            fail_items = sorted(fail_dict.items(), key=lambda x: x[0][0])
+            xx = [date2num(i[0][0]) for i in success_items]
+            zz = [i[1] for i in success_items]
+            if max(zz) > z_limits[1]:
+                z_limits[1] = max(zz)
+            self.plot_bar2d(xx, zz, y_index, data[0][feature], color=cm(2 * j))
+            xx = [date2num(i[0][0]) for i in fail_items]
+            zz = [i[1] for i in fail_items]
+            if min(zz) < z_limits[0]:
+                z_limits[0] = min(zz)
+            self.plot_bar2d(xx, zz, y_index, data[0][feature], color=cm(2 * j + 1))
+            y_index += 1
 
+        self.axes.set_zlim3d(z_limits)
+
+        self.canvas.draw()
+
+    def plot_bar2d(self, xx, zz, y_index, feature_name, color):
+        if len(xx) > 1:
+            dx = [xx[i] - xx[i-1] for i in range(len(xx)) if i != 0]
+            dx += dx[-1:]
+            y = [y_index] * len(dx)
+            dy = [0.95] * len(dx)
+            dz = zz
+            z = [0] * len(dx)
+            if len(xx) != len(y) or len(xx) != len(z):
+                print xx, y, z
+            self.axes.bar3d(xx, y, z, dx, dy, dz, color=color)
+
+    def get_cmap(self, n):
+        """
+        Returns a function that maps each index in 0, 1, ... N-1 to a distinct
+        RGB color.
+        """
+        color_norm = colors.Normalize(vmin=0, vmax=n-1)
+        scalar_map = cmx.ScalarMappable(norm=color_norm, cmap='hsv')
+
+        def map_index_to_rgb_color(index):
+            return scalar_map.to_rgba(index)
+
+        return map_index_to_rgb_color
