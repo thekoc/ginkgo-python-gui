@@ -2,13 +2,16 @@
 import ConfigParser
 import os
 import threading
+import sys
 
-path = os.path.abspath(__file__)
-dir_path = os.path.dirname(path)
+# path = os.path.abspath(__file__)
+# dir_path = os.path.dirname(path)
+if getattr(sys, 'frozen', False):
+    os.chdir(sys._MEIPASS)
 
 
 class AppConfig(object):
-    file_path = os.path.join(dir_path, 'Data/app.cfg')
+    file_path = 'app.cfg'
     lock = threading.Lock()
 
     def __init__(self):

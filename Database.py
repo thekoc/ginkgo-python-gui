@@ -3,6 +3,11 @@
 import pyodbc
 import platform
 import pickle
+import sys
+import os
+
+if getattr(sys, 'frozen', False):
+    os.chdir(sys._MEIPASS)
 
 
 class ConnectionError(Exception):
