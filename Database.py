@@ -95,10 +95,17 @@ class DataViewDatabase(object):
 class FilterListDatabase(object):
     def __init__(self):
         self.row_items = []
+        self.checked_items = set()
 
     def insert_row(self, row, items):
         if items not in self.row_items:
             self.row_items.insert(row, items)
+
+    def merge_checked_item(self, item_text):
+        self.checked_items.add(item_text)
+
+    def delete_checked_item(self, item_text):
+        self.checked_items.discard(item_text)
 
 
 class GraphDatabase(object):

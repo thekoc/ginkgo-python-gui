@@ -53,11 +53,13 @@ class CheckListWithFilterPanelController(object):
         self.list_ctrl.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.double_click)
         self.list_ctrl.Bind(wx.EVT_LIST_COL_CLICK, self.column_click)
 
+        self.list_ctrl.OnCheckItem = self.on_check_item
+
     def get_selected_index(self):
-        return self.panel.list_ctrl.GetFirstSelected()
+        return self.list_ctrl.GetFirstSelected()
 
     def get_selected_item_text(self):
-        return self.panel.list_ctrl.GetItemText(self.get_selected_index())
+        return self.list_ctrl.GetItemText(self.get_selected_index())
 
     def select_all(self, event):
         num = self.list_ctrl.GetItemCount()
@@ -132,6 +134,8 @@ class CheckListWithFilterPanelController(object):
             row_items = self.database.row_items
         for items in row_items:
             self.insert_row(sys.maxint, items)
+            if tuple(items) in self.database.checked_items:
+                self.list_ctrl.CheckItem(self.list_ctrl.GetItemCount() - 1)
 
     def set_custom_button_label1(self, label):
         self.custom_button1.LabelText = label
@@ -145,6 +149,14 @@ class CheckListWithFilterPanelController(object):
 
     def set_custom_function2(self, func):
         self.custom_button2.Bind(wx.EVT_BUTTON, func)
+
+    def on_check_item(self, index, flag):
+        row_items = tuple(self.list_ctrl.GetItemText(index, i) for i in range(0, self.panel.column))
+        if flag:
+            self.database.merge_checked_item(row_items)
+        else:
+            self.database.delete_checked_item(row_items)
+
 
 if __name__ == '__main__':
     app = wx.App(False)

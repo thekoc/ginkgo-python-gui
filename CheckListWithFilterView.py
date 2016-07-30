@@ -55,6 +55,7 @@ class CheckListWithFilterPanel(wx.Panel):
         self.SetSizerAndFit(main_box)
 
 
+
 if __name__ == '__main__':
     app = wx.App(False)
     frame = wx.Frame(None, title='testView')
