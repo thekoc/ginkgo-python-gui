@@ -158,38 +158,56 @@ class MatplotlibPanelController(object):
         self.canvas.draw()
 
     def plot_bar_graph(self, classified_data, feature):
-        self.figure.delaxes(self.axes)
-        self.axes = self.figure.add_subplot(111, projection='3d')
-        success = [7, 11, 14]
-        fail = [8, 12, 15]
-        y_index = 0
-        z_limits = [-1, 1]
-        num = len(classified_data) * 2
-        cm = self.get_cmap(num)
-        for j, data in enumerate(classified_data):
-            success_dict = {}
-            fail_dict = {}
-            plot_data_dict = self._divide_into_interval(data)
-            for key in plot_data_dict:
-                success_dict[key] = sum(1 for i in plot_data_dict[key] if i['type'] in success)
-                fail_dict[key] = sum(-1 for i in plot_data_dict[key] if i['type'] in fail)
-            success_items = sorted(success_dict.items(), key=lambda x: x[0][0])
-            fail_items = sorted(fail_dict.items(), key=lambda x: x[0][0])
-            xx = [date2num(i[0][0]) for i in success_items]
-            zz = [i[1] for i in success_items]
-            if max(zz) > z_limits[1]:
-                z_limits[1] = max(zz)
-            self.plot_bar2d(xx, zz, y_index, data[0][feature], color=cm(2 * j))
-            xx = [date2num(i[0][0]) for i in fail_items]
-            zz = [i[1] for i in fail_items]
-            if min(zz) < z_limits[0]:
-                z_limits[0] = min(zz)
-            self.plot_bar2d(xx, zz, y_index, data[0][feature], color=cm(2 * j + 1))
-            y_index += 1
+        if classified_data != []:
+            self.figure.delaxes(self.axes)
+            self.axes = self.figure.add_subplot(111, projection='3d')
+            success = [7, 11, 14]
+            fail = [8, 12, 15]
+            y_index = 0
+            z_limits = [-1, 1]
+            x_limits_dict = {'possible_min': [], 'possible_max':[]}
+            num = len(classified_data) * 2
+            cm = self.get_cmap(num)
+            for j, data in enumerate(classified_data):
+                success_dict = {}
+                fail_dict = {}
+                plot_data_dict = self._divide_into_interval(data)
+                for key in plot_data_dict:
+                    success_dict[key] = sum(1 for i in plot_data_dict[key] if i['type'] in success)
+                    fail_dict[key] = sum(-1 for i in plot_data_dict[key] if i['type'] in fail)
+                success_items = sorted(success_dict.items(), key=lambda x: x[0][0])
+                fail_items = sorted(fail_dict.items(), key=lambda x: x[0][0])
+                xx = [date2num(i[0][0]) for i in success_items]
+                zz = [i[1] for i in success_items]
+                if max(zz) > z_limits[1]:
+                    z_limits[1] = max(zz)
+                self.plot_bar2d(xx, zz, y_index, data[0][feature], color=cm(2 * j))
+                xx = [date2num(i[0][0]) for i in fail_items]
+                zz = [i[1] for i in fail_items]
+                if min(zz) < z_limits[0]:
+                    z_limits[0] = min(zz)
+                self.plot_bar2d(xx, zz, y_index, data[0][feature], color=cm(2 * j + 1))
 
-        self.axes.set_zlim3d(z_limits)
+                x_limits_dict['possible_min'].append(min(success_items[0][0][0], fail_items[0][0][0]))
+                x_limits_dict['possible_max'].append(max(success_items[-1][0][1], fail_items[-1][0][1]))
+                y_index += 1
 
-        self.canvas.draw()
+            ax = self.axes
+            import matplotlib.dates as mdates
+            years = mdates.YearLocator()  # every year
+            months = mdates.MonthLocator()  # every month
+            yearsFmt = mdates.DateFormatter('%Y')
+            ax.set_zlim3d(z_limits)
+            ax.xaxis.set_major_locator(years)
+            ax.xaxis.set_major_formatter(yearsFmt)
+            ax.xaxis.set_minor_locator(months)
+
+            datemin = datetime.date(min(x_limits_dict['possible_min']).year, 1, 1)
+            datemax = datetime.date(min(x_limits_dict['possible_max']).year + 1, 1, 1)
+            ax.set_xlim(datemin, datemax)
+
+
+            self.canvas.draw()
 
     def plot_bar2d(self, xx, zz, y_index, feature_name, color):
         if len(xx) > 1:

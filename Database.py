@@ -66,7 +66,16 @@ class DataViewDatabase(object):
         self.list_data = None
 
     def set_available_data(self, post_data):
+
         # type: (dict) -> dict[str, list[dict]]
+        """
+        Called by DataViewController for initializing.
+
+        Args:
+            post_data: A dict that has 2 keys: date and case set
+                       the date is a tuple that contains two datetime.date referring start date and end date
+                       the case set is a set that contains all needed cases
+        """
         filter_data = filter(lambda x: post_data['date'][0] <= x['date'] <= post_data['date'][1], self.database.data)
         filter_data = filter(lambda x: x['case_name'] in post_data['case_set'], filter_data)
         self.list_data = list(filter_data)
