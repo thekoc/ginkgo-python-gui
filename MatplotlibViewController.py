@@ -200,7 +200,7 @@ class MatplotlibPanelController(object):
             dz = zz
             z = [0] * len(dx)
             if len(xx) != len(y) or len(xx) != len(z):
-                print xx, y, z
+                print(xx, y, z)
             self.axes.bar3d(xx, y, z, dx, dy, dz, color=color)
 
     def get_cmap(self, n):

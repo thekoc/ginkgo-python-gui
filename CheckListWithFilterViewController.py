@@ -78,7 +78,8 @@ class CheckListWithFilterPanelController(object):
         text = self.filter_text_ctrl.Value.lower()
         self.list_ctrl.DeleteAllItems()
         row_items = [[line.lower() for line in row] for row in self.database.row_items]
-        self.set_display_items(items for items in row_items if text in items[0])
+        self.set_display_items(ori_items for ori_items, items in zip(self.database.row_items, row_items)
+                               if text in items[0])
 
     def apply(self, event):
         pass

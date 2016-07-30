@@ -50,7 +50,7 @@ class SelectorFrame(wx.Frame):
 
         main_box.Add(case_box, 1, wx.EXPAND | wx.ALL, 10)
 
-        # ======== inqure button ========
+        # ======== inquire button ========
         self.inquire_button = inquire_button = wx.Button(
             panel, label=u'查询用例测试固件')
         main_box.Add(inquire_button, 0, wx.EXPAND | wx.ALL, 10)
