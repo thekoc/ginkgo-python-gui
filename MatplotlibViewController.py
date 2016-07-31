@@ -128,37 +128,38 @@ class MatplotlibPanelController(object):
         return plot_data_dict
 
     def plot_line_graph(self, classified_data, feature):
-        success = [7, 11, 14]
-        fail = [8, 12, 15]
-        self.figure.delaxes(self.axes)
-        self.axes = self.figure.add_subplot(111)
-        self.axes.clear()
+        if classified_data:
+            success = [7, 11, 14]
+            fail = [8, 12, 15]
+            self.figure.delaxes(self.axes)
+            self.axes = self.figure.add_subplot(111)
+            self.axes.clear()
 
-        for data in classified_data:
-            plot_data_dict = self._divide_into_interval(data)
-            success_dict = {}
-            for key in plot_data_dict:
-                items = plot_data_dict[key]
-                success_dict[key] = sum(1 for i in items if i['type'] in success) / len(items)
-                assert isinstance(success_dict[key], float)
+            for data in classified_data:
+                plot_data_dict = self._divide_into_interval(data)
+                success_dict = {}
+                for key in plot_data_dict:
+                    items = plot_data_dict[key]
+                    success_dict[key] = sum(1 for i in items if i['type'] in success) / len(items)
+                    assert isinstance(success_dict[key], float)
 
-            plot_items = sorted(success_dict.items(), key=lambda x: x[0][0])
-            xx = [date2num(i[0][0]) for i in plot_items]
-            yy = [i[1] for i in plot_items]
-            self.axes.plot_date(xx, yy, fmt='-', label=data[0][feature])
+                plot_items = sorted(success_dict.items(), key=lambda x: x[0][0])
+                xx = [date2num(i[0][0]) for i in plot_items]
+                yy = [i[1] for i in plot_items]
+                self.axes.plot_date(xx, yy, fmt='-', label=data[0][feature])
 
-        self.axes.set_ylabel('success rate')
-        self.axes.legend(fontsize=10).get_frame().set_alpha(0.5)
-        self.figure.patch.set_facecolor('white')
-        self.axes.set_aspect('auto')
-        self.axes.autoscale_view()
-        self.axes.grid(True)
-        self.figure.autofmt_xdate()
+            self.axes.set_ylabel('success rate')
+            self.axes.legend(fontsize=10).get_frame().set_alpha(0.5)
+            self.figure.patch.set_facecolor('white')
+            self.axes.set_aspect('auto')
+            self.axes.autoscale_view()
+            self.axes.grid(True)
+            self.figure.autofmt_xdate()
 
-        self.canvas.draw()
+            self.canvas.draw()
 
     def plot_bar_graph(self, classified_data, feature):
-        if classified_data != []:
+        if classified_data:
             self.figure.delaxes(self.axes)
             self.axes = self.figure.add_subplot(111, projection='3d')
             success = [7, 11, 14]
