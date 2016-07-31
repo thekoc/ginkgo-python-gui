@@ -57,6 +57,14 @@ class IDATDBdatabase(object):
             IDATDBdatabase.data.append(row_data)
             self.case_set.add(row_data['case_name'])
 
+    # remained changing
+    def get_cases(self):
+        """
+
+        Returns:
+            set: A set contained all cases.
+        """
+        return list(self.case_set) * 100
 
 class DataViewDatabase(object):
     def __init__(self):

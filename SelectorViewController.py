@@ -2,10 +2,40 @@
 import wx
 import datetime
 from SelectorView import SelectorFrame
+from CheckListWithFilterViewController import CheckListWithFilterPanelController
 from wx.lib.pubsub import pub
 from Radio.MessageType import FrameMessage
 from Radio.Radio import Channel
 from Database import IDATDBdatabase
+
+
+class CheckListDialog(wx.Dialog):
+    def __init__(
+            self, parent, id_, title, size=wx.DefaultSize, pos=wx.DefaultPosition,
+            style=wx.DEFAULT_DIALOG_STYLE, name='dialog'
+    ):
+        wx.Dialog.__init__(self, parent, id_, title, pos, size, style, name)
+        sizer = wx.BoxSizer(wx.VERTICAL)
+
+        self.check_controller = check_controller = CheckListWithFilterPanelController(self)
+        panel = check_controller.panel
+
+        sizer.Add(panel, 0, wx.ALIGN_CENTRE | wx.ALL, 5)
+
+
+        # set check_ctrl
+        check_controller.set_custom_button_label2(u'完成选择')
+        check_controller.set_custom_function2(self.finish)
+        check_controller.insert_column(0, u'用例')
+        for i, c in enumerate(IDATDBdatabase.case_set):
+            check_controller.insert_row(i, (c,))
+        sizer.Fit(self)
+
+    def finish(self, event):
+        self.EndModal(wx.ID_OK)
+
+    def get_checked_item_text(self):
+        return self.check_controller.get_checked_item_text()
 
 
 def _wxdate2pydate(date):
@@ -41,9 +71,11 @@ class SelectorFrameController(object):
 
     def view_loaded(self):
         # debug
-        for i, j in enumerate(sorted(list(self.database.case_set))):
-            if i < 20:
-                self.list_box.Append(j)
+        # for i, j in enumerate(sorted(list(self.database.case_set))):
+        #     if i < 8:
+        #         self.list_box.Append(j)
+
+        pass
 
     def action_bind(self):
         self.new_button.Bind(wx.EVT_BUTTON, self.add_case)
@@ -54,9 +86,15 @@ class SelectorFrameController(object):
         self.inquire_button.Bind(wx.EVT_BUTTON, self.inquire)
 
     def add_case(self, event):
-        case = ''
-        if self.is_legal_case(case):
-            self.list_box.Append('place holder')
+        dlg = CheckListDialog(self.frame, -1, u"请选择", size=(350, 200),
+                              style=wx.DEFAULT_DIALOG_STYLE)
+        dlg.CenterOnScreen()
+        dlg.ShowModal()
+        cases = dlg.get_checked_item_text()
+        dlg.Destroy()
+        for case in cases:
+            if self.is_legal_case(case) and not self.has_in_box(case):
+                self.list_box.Append(case)
 
     def edit_case(self, event):
         sel = self.list_box.GetSelection()
@@ -93,8 +131,11 @@ class SelectorFrameController(object):
     def is_legal_case(self, case_name):
         return case_name in self.database.case_set
 
+    def has_in_box(self, case_name):
+        return case_name in self.list_box.GetItems()
+
+
 if __name__ == '__main__':
     app = wx.App(False)
-    test_frame = SelectorFrame(None, 'Selector')
-    con = SelectorFrameController(test_frame)
+    con = SelectorFrameController()
     app.MainLoop()
