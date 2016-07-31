@@ -17,6 +17,7 @@ class LoginFrameController(object):
         # type: (LoginFrame) -> None
         self.config = AppConfig()
         self.database = IDATDBdatabase()
+        self.is_locked = False
 
         if frame is None:
             frame = LoginFrame(None, u'登录')
@@ -45,14 +46,16 @@ class LoginFrameController(object):
             self.pwd_text_field.Value = self.config.password
 
     def login(self, event):
-        uid = self.uid_text_field.Value
-        pwd = self.pwd_text_field.Value
-        server = self.ip_text_field.Value
-        if self.config.remember:
-            self.config.uid = uid
-            self.config.password = pwd
-            self.config.ip = server
-        thread.start_new_thread(self.database_connect, (uid, pwd, server))
+        if not self.is_locked:
+            self.is_locked = True
+            uid = self.uid_text_field.Value
+            pwd = self.pwd_text_field.Value
+            server = self.ip_text_field.Value
+            if self.config.remember:
+                self.config.uid = uid
+                self.config.password = pwd
+                self.config.ip = server
+            thread.start_new_thread(self.database_connect, (uid, pwd, server))
 
     def database_connect(self, uid, pwd, server):
         try:
@@ -61,6 +64,8 @@ class LoginFrameController(object):
             wx.CallAfter(lambda: wx.MessageBox(u'请检查登录信息', u'登录失败', wx.OK | wx.ICON_ERROR))
         else:
             wx.CallAfter(lambda: pub.sendMessage(Channel.fmFrame, sender=self.frame, msg=FrameMessage.logged_in))
+        finally:
+            self.is_locked = False
 
 
     def remember_changed(self, event):
