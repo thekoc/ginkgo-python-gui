@@ -169,6 +169,9 @@ class MatplotlibPanelController(object):
             x_limits_dict = {'possible_min': [], 'possible_max':[]}
             num = len(classified_data) * 2
             cm = self.get_cmap(num)
+
+            y_ticks = []
+            y_labels = []
             for j, data in enumerate(classified_data):
                 success_dict = {}
                 fail_dict = {}
@@ -176,18 +179,28 @@ class MatplotlibPanelController(object):
                 for key in plot_data_dict:
                     success_dict[key] = sum(1 for i in plot_data_dict[key] if i['type'] in success)
                     fail_dict[key] = sum(-1 for i in plot_data_dict[key] if i['type'] in fail)
+
                 success_items = sorted(success_dict.items(), key=lambda x: x[0][0])
                 fail_items = sorted(fail_dict.items(), key=lambda x: x[0][0])
+                # print success_items
+                # print fail_items
+
                 xx = [date2num(i[0][0]) for i in success_items]
+                dx = [date2num(i[0][1]) - date2num(i[0][0]) for i in fail_items]
                 zz = [i[1] for i in success_items]
                 if max(zz) > z_limits[1]:
                     z_limits[1] = max(zz)
-                self.plot_bar2d(xx, zz, y_index, data[0][feature], color=cm(2 * j))
+                self.plot_bar2d(xx, dx, zz, y_index, data[0][feature], color=cm(2 * j))
+
                 xx = [date2num(i[0][0]) for i in fail_items]
+                dx = [date2num(i[0][1]) - date2num(i[0][0]) for i in fail_items]
                 zz = [i[1] for i in fail_items]
                 if min(zz) < z_limits[0]:
                     z_limits[0] = min(zz)
-                self.plot_bar2d(xx, zz, y_index, data[0][feature], color=cm(2 * j + 1))
+                self.plot_bar2d(xx, dx, zz, y_index, data[0][feature], color=cm(2 * j + 1))
+
+                y_ticks.append(y_index)
+                y_labels.append(data[0][feature])
 
                 x_limits_dict['possible_min'].append(min(success_items[0][0][0], fail_items[0][0][0]))
                 x_limits_dict['possible_max'].append(max(success_items[-1][0][1], fail_items[-1][0][1]))
@@ -195,31 +208,31 @@ class MatplotlibPanelController(object):
 
             ax = self.axes
             import matplotlib.dates as mdates
-            years = mdates.YearLocator()  # every year
-            months = mdates.MonthLocator()  # every month
-            yearsFmt = mdates.DateFormatter('%Y')
+            # months = mdates.MonthLocator()  # every month
+            months = mdates.MonthLocator(range(1, 13), bymonthday=1, interval=3)
+            years_fmt = mdates.DateFormatter('%b %Y')
             ax.set_zlim3d(z_limits)
-            ax.xaxis.set_major_locator(years)
-            ax.xaxis.set_major_formatter(yearsFmt)
-            ax.xaxis.set_minor_locator(months)
+            ax.xaxis.set_major_locator(months)
+            ax.xaxis.set_major_formatter(years_fmt)
+            ax.autoscale_view()
+            self.figure.autofmt_xdate()
+            ax.yaxis.set_ticks(y_ticks)
+            ax.yaxis.set_ticklabels(y_labels)
 
-            datemin = datetime.date(min(x_limits_dict['possible_min']).year, 1, 1)
-            datemax = datetime.date(min(x_limits_dict['possible_max']).year + 1, 1, 1)
-            ax.set_xlim(datemin, datemax)
+            date_min = datetime.date(min(x_limits_dict['possible_min']).year, 1, 1)
+            date_max = datetime.date(max(x_limits_dict['possible_max']).year + 1, 1, 1)
+            ax.set_xlim(date_min, date_max)
 
 
             self.canvas.draw()
 
-    def plot_bar2d(self, xx, zz, y_index, feature_name, color):
-        if len(xx) > 1:
-            dx = [xx[i] - xx[i-1] for i in range(len(xx)) if i != 0]
-            dx += dx[-1:]
+    def plot_bar2d(self, xx, dx, zz, y_index, feature_name, color):
+        color = [color] * len(xx)
+        if len(xx) >= 1:
             y = [y_index] * len(dx)
             dy = [0.95] * len(dx)
             dz = zz
             z = [0] * len(dx)
-            if len(xx) != len(y) or len(xx) != len(z):
-                print(xx, y, z)
             self.axes.bar3d(xx, y, z, dx, dy, dz, color=color)
 
     def get_cmap(self, n):
@@ -227,7 +240,7 @@ class MatplotlibPanelController(object):
         Returns a function that maps each index in 0, 1, ... N-1 to a distinct
         RGB color.
         """
-        color_norm = colors.Normalize(vmin=0, vmax=n-1)
+        color_norm = colors.Normalize(vmin=0, vmax=max(n-1, 1))
         scalar_map = cmx.ScalarMappable(norm=color_norm, cmap='hsv')
 
         def map_index_to_rgb_color(index):
