@@ -11,9 +11,8 @@ from Database import IDATDBdatabase
 
 class CheckListDialog(wx.Dialog):
     def __init__(
-            self, parent, id_, title, size=wx.DefaultSize, pos=wx.DefaultPosition,
-            style=wx.DEFAULT_DIALOG_STYLE, name='dialog'
-    ):
+            self, parent, id_, title, size=wx.DefaultSize,
+            pos=wx.DefaultPosition, style=wx.DEFAULT_DIALOG_STYLE, name='dialog'):
         wx.Dialog.__init__(self, parent, id_, title, pos, size, style, name)
         sizer = wx.BoxSizer(wx.VERTICAL)
 
@@ -48,6 +47,12 @@ def _wxdate2pydate(date):
         return None
 
 
+def _pydate2wxdate(date):
+    tt = date.timetuple()
+    dmy = (tt[2], tt[1]-1, tt[0])
+    return wx.DateTimeFromDMY(*dmy)
+
+
 class SelectorFrameController(object):
     def __init__(self, frame=None):
         # type: (SelectorFrame) -> None
@@ -70,12 +75,7 @@ class SelectorFrameController(object):
         self.action_bind()
 
     def view_loaded(self):
-        # debug
-        # for i, j in enumerate(sorted(list(self.database.case_set))):
-        #     if i < 8:
-        #         self.list_box.Append(j)
-
-        pass
+        self.start_date_ctrl.Value = self.end_date_ctrl.Value - wx.DateSpan(months=1)
 
     def action_bind(self):
         self.new_button.Bind(wx.EVT_BUTTON, self.add_case)
