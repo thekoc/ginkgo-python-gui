@@ -1,6 +1,6 @@
 from wx.lib.pubsub import pub
 from LoginViewController import LoginFrameController
-from SelectorViewController import SelectorFrameController
+from SelectorViewController import SlectorPanelController
 from DataViewController import DataFrameController
 from Radio.MessageType import FrameMessage
 from Radio.Radio import Channel
@@ -9,7 +9,7 @@ import wx
 
 class AppController(object):
     """
-    :type selector_controller : SelectorFrameController
+    :type selector_controller : SlectorPanelController
     :type data_frame_controller : DataFrameController
     """
     def __init__(self):
@@ -27,11 +27,10 @@ class AppController(object):
 
     def frame_manager(self, sender, msg, data=None):
         if msg == FrameMessage.logged_in:
-            self.selector_controller = SelectorFrameController()
+            self.data_frame_controller = DataFrameController()
             wx.CallAfter(sender.Close)
 
         elif msg == FrameMessage.inquire:
-            self.data_frame_controller = DataFrameController()
             self.data_frame_controller.set_start_data(data)
 
 

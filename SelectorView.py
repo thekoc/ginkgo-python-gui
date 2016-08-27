@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*
 
 import wx
+from CheckListWithFilterView import CheckListWithFilterPanel
+from Database import IDATDBdatabase
 
 
-class SelectorFrame(wx.Frame):
+class SlectorPanel(wx.Panel):
     """选择时间, case 等的界面."""
-
-    def __init__(self, parent, title):
-        wx.Frame.__init__(self, parent, title=title, size=(300, 300))
-        self.panel = panel = wx.Panel(self)
+    def __init__(self, parent):
+        # wx.Frame.__init__(self, parent, title=title, size=(300, 300))
+        wx.Panel.__init__(self, parent)
+        self.panel = panel = self
         main_box = wx.BoxSizer(wx.VERTICAL)
 
         # ======== time selector ========
@@ -26,42 +28,26 @@ class SelectorFrame(wx.Frame):
         main_box.Add(date_box, 0, wx.EXPAND | wx.ALL, 10)
 
         # ======== case selector ========
-        case_box = wx.BoxSizer(wx.HORIZONTAL)
+        sizer = wx.BoxSizer(wx.VERTICAL)
 
-        self.list_box = list_box = wx.ListBox(panel, -1)
-        case_box.Add(list_box, 1, wx.EXPAND | wx.UP, 10)
+        self.check_list = check_list = CheckListWithFilterPanel(self)
 
-        # ======== button panel ========
-        button_panel = wx.Panel(panel, -1)
-        button_box = wx.BoxSizer(wx.VERTICAL)
-        self.new_button = new_button = wx.Button(button_panel, label=u'添加用例')
-        self.edit_button = edit_button = wx.Button(button_panel, label=u'编辑用例')
-        self.delete_button = delete_button = wx.Button(
-            button_panel, label=u'删除用例')
-        self.clear_button = clear_button = wx.Button(
-            button_panel, label=u'清除全部')
+        sizer.Add(check_list, 0, wx.ALIGN_CENTRE | wx.ALL, 5)
+        sizer.Fit(self)
 
-        button_box.Add(new_button, 1, wx.EXPAND | wx.UP, 10)
-        button_box.Add(edit_button, 1, wx.EXPAND | wx.UP, 10)
-        button_box.Add(delete_button, 1, wx.EXPAND | wx.UP, 10)
-        button_box.Add(clear_button, 1, wx.EXPAND | wx.UP, 10)
-        button_panel.SetSizer(button_box)
-        case_box.Add(button_panel, 0, wx.EXPAND | wx.LEFT, 10)
-
-        main_box.Add(case_box, 1, wx.EXPAND | wx.ALL, 10)
-
-        # ======== inquire button ========
-        self.inquire_button = inquire_button = wx.Button(
-            panel, label=u'查询用例测试固件')
-        main_box.Add(inquire_button, 0, wx.EXPAND | wx.ALL, 10)
+        main_box.Add(sizer, 1, wx.EXPAND | wx.ALL, 10)
+        # 
+        # # ======== inquire button ========
+        # self.inquire_button = inquire_button = wx.Button(
+        #     panel, label=u'查询用例测试固件')
+        # main_box.Add(inquire_button, 0, wx.EXPAND | wx.ALL, 10)
 
         panel.SetSizerAndFit(main_box)
-        self.Fit()
-        self.Centre()
-        self.Show(True)
+        # self.Centre()
+        # self.Show(True)
 
 
 if __name__ == '__main__':
     app = wx.App(False)
-    test_frame = SelectorFrame(None, 'Selector')
+    test_frame = SlectorPanel(None, 'Selector')
     app.MainLoop()

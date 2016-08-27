@@ -2,6 +2,7 @@
 from DataView import DataFrame
 from MatplotlibViewController import MatplotlibPanelController
 from CheckListWithFilterViewController import CheckListWithFilterPanelController
+from SelectorViewController import SlectorPanelController
 from Database import DataViewDatabase
 import wx
 import sys
@@ -46,6 +47,8 @@ class DataFrameController(object):
         self.firmware_list_panel = frame.firmware_list
         self.firmware_controller = CheckListWithFilterPanelController(self.frame, self.firmware_list_panel)
 
+        self.case_controller = SlectorPanelController(self.frame.case_list_panel)
+
         self.set_firmware()
 
         self.action_bind()
@@ -64,6 +67,9 @@ class DataFrameController(object):
         self.firmware_controller.insert_column(1, u'测试用例数')
         self.firmware_controller.insert_column(2, u'总数')
 
+    def set_case(self):
+        pass
+
     def radio_button_changed(self, event):
         self.plot_data()
 
@@ -77,6 +83,7 @@ class DataFrameController(object):
     def set_start_data(self, post_data):
         self.database.set_available_data(post_data)
         content_rows = self.database.get_list_content()
+        self.firmware_controller.delete_all_items()
         for i, row in enumerate(content_rows):
             self.firmware_controller.insert_row(i, row)
         self.plot_data()

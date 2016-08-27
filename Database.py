@@ -135,6 +135,10 @@ class FilterListDatabase(object):
     def delete_checked_item(self, item_text):
         self.checked_items.discard(item_text)
 
+    def delete_all(self):
+        self.row_items = []
+        self.checked_items = set()
+
 
 class GraphDatabase(object):
     def __init__(self):

@@ -127,6 +127,10 @@ class CheckListWithFilterPanelController(object):
         num = self.list_ctrl.GetItemCount()
         return [[self.list_ctrl.GetItemText(i, j) for j in range(self.panel.column)] for i in range(num)]
 
+    def delete_all_items(self):
+        self.list_ctrl.DeleteAllItems()
+        self.database.delete_all()
+
     def set_display_items(self, row_items=None):
         self.list_ctrl.DeleteAllItems()
         if row_items is None:

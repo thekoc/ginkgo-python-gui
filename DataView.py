@@ -2,6 +2,7 @@
 import wx
 from MatplotlibView import MatplotlibPanel
 from CheckListWithFilterView import CheckListWithFilterPanel
+from SelectorView import SlectorPanel
 
 
 class DataFrame(wx.Frame):
@@ -46,6 +47,10 @@ class DataFrame(wx.Frame):
 
         # ======== firmware and case choose notebook ========
         nb = wx.Notebook(panel)
+
+        self.case_list_panel = case_list = SlectorPanel(nb)
+        nb.AddPage(case_list, u"用例/时间选择")
+
         self.firmware_list = firmware_list = CheckListWithFilterPanel(nb)
         nb.AddPage(firmware_list, u"固件选择")
         bottom_box.Add(nb, 1, wx.EXPAND)
