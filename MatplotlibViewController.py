@@ -54,7 +54,7 @@ class MatplotlibPanelController(object):
 
     def plot_handler(self, data, option):
         """
-        Handles data received from radio and hand over them for further procedure
+        Handles data received from radio and hand over them for further procedure.
 
         Args:
             data: list that contained all data needs to be plotted as a dict
@@ -70,12 +70,12 @@ class MatplotlibPanelController(object):
 
         if option[0] == u'饼状图':
             self.plot_pie_graph(classified_data, feature)
-        elif option[0] == u'柱状图':
+        elif option[0] == u'成功/失败个数':
             self.plot_bar_graph(classified_data, feature)
-        elif option[0] == u'折线图':
+        elif option[0] == u'成功率趋势图':
             self.plot_line_graph(classified_data, feature)
         else:
-            raise ValueError
+            raise ValueError(option)
 
     def common_classify_data(self, data, feature):
         # type: (list[dict], str) -> list[list[dict]]
@@ -170,91 +170,26 @@ class MatplotlibPanelController(object):
     def plot_bar_graph(self, classified_data, feature):
         if classified_data:
             self.figure.delaxes(self.axes)
-            self.axes = self.figure.add_subplot(111, projection='3d')
+            axes = self.axes = self.figure.add_subplot(111)
+
             success = [7, 11, 14]
             fail = [8, 12, 15]
-            y_index = 0
-            z_limits = [-1, 1]
-            x_limits_dict = {'possible_min': [], 'possible_max': []}
-            num = len(classified_data) * 2
-            cm = self.get_cmap(num)
 
-            y_ticks = []
-            y_labels = []
-            for j, data in enumerate(classified_data):
-                success_dict = {}
-                fail_dict = {}
-                plot_data_dict = self._divide_into_interval(data)
-                for key in plot_data_dict:
-                    success_dict[key] = sum(1 for i in plot_data_dict[
-                                            key] if i['type'] in success)
-                    fail_dict[
-                        key] = sum(-1 for i in plot_data_dict[key] if i['type'] in fail)
+            success_number_list = [len([i for i in j if i['type'] in success]) for j in classified_data]
+            fail_number_list = [len([i for i in j if i['type'] in fail]) for j in classified_data]
+            ind = range(1, len(classified_data) + 1)
+            width = [0.8] * len(ind)
 
-                success_items = sorted(
-                    success_dict.items(), key=lambda x: x[0][0])
-                fail_items = sorted(fail_dict.items(), key=lambda x: x[0][0])
-                # print success_items
-                # print fail_items
+            axes.xaxis.set_ticks(ind + [i / 2 for i in width])
+            axes.xaxis.set_ticklabels([i[0][feature] for i in classified_data])
+            axes.autoscale_view()
+            axes.axes.set_ylabel(u'Amount of Success/Fail')
 
-                xx = [date2num(i[0][0]) for i in success_items]
-                dx = [date2num(i[0][1]) - date2num(i[0][0])
-                      for i in fail_items]
-                zz = [i[1] for i in success_items]
-                if max(zz) > z_limits[1]:
-                    z_limits[1] = max(zz)
-                self.plot_bar2d(xx, dx, zz, y_index, data[
-                                0][feature], color=cm(2 * j))
-
-                xx = [date2num(i[0][0]) for i in fail_items]
-                dx = [date2num(i[0][1]) - date2num(i[0][0])
-                      for i in fail_items]
-                zz = [i[1] for i in fail_items]
-                if min(zz) < z_limits[0]:
-                    z_limits[0] = min(zz)
-                self.plot_bar2d(xx, dx, zz, y_index, data[0][
-                                feature], color=cm(2 * j + 1))
-
-                y_ticks.append(y_index)
-                y_labels.append(data[0][feature])
-
-                x_limits_dict['possible_min'].append(
-                    min(success_items[0][0][0], fail_items[0][0][0]))
-                x_limits_dict['possible_max'].append(
-                    max(success_items[-1][0][1], fail_items[-1][0][1]))
-                y_index += 1
-
-            ax = self.axes
-            ax.set_zlabel('amount of success/fail')
-            import matplotlib.dates as mdates
-            # months = mdates.MonthLocator()  # every month
-            months = mdates.MonthLocator(
-                range(1, 13), bymonthday=1, interval=3)
-            years_fmt = mdates.DateFormatter('%b %Y')
-            ax.set_zlim3d(z_limits)
-            ax.xaxis.set_major_locator(months)
-            ax.xaxis.set_major_formatter(years_fmt)
-            ax.autoscale_view()
-            self.figure.autofmt_xdate()
-            ax.yaxis.set_ticks(y_ticks)
-            ax.yaxis.set_ticklabels(y_labels)
-
-            date_min = datetime.date(
-                min(x_limits_dict['possible_min']).year, 1, 1)
-            date_max = datetime.date(
-                max(x_limits_dict['possible_max']).year + 1, 1, 1)
-            ax.set_xlim(date_min, date_max)
+            b1 = axes.bar(ind, success_number_list, color='green')
+            b2 = axes.bar(ind, fail_number_list, bottom=success_number_list, color='r')
+            axes.legend((b1[0], b2[0]), ('Success', 'Fail'))
 
             self.canvas.draw()
-
-    def plot_bar2d(self, xx, dx, zz, y_index, feature_name, color):
-        color = [color] * len(xx)
-        if len(xx) >= 1:
-            y = [y_index] * len(dx)
-            dy = [0.95] * len(dx)
-            dz = zz
-            z = [0] * len(dx)
-            self.axes.bar3d(xx, y, z, dx, dy, dz, color=color)
 
     def get_cmap(self, n):
         """
