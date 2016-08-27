@@ -44,9 +44,11 @@ class DataFrame(wx.Frame):
         option_box.Layout()
         bottom_box.Add(option_panel, 0, wx.EXPAND | wx.ALL, 20)
 
-        # ======== firmware list ========
-        self.firmware_list = firmware_list = CheckListWithFilterPanel(panel)
-        bottom_box.Add(firmware_list, 1, wx.EXPAND)
+        # ======== firmware and case choose notebook ========
+        nb = wx.Notebook(panel)
+        self.firmware_list = firmware_list = CheckListWithFilterPanel(nb)
+        nb.AddPage(firmware_list, u"固件选择")
+        bottom_box.Add(nb, 1, wx.EXPAND)
 
         main_box.Add(bottom_box, 0, wx.EXPAND)
 
