@@ -52,7 +52,7 @@ class DataFrameController(object):
         self.set_default_option_button()
 
     def action_bind(self):
-        map(lambda x: x.Bind(wx.EVT_RADIOBUTTON, self.radio_button_changed), self.frame.option_list)
+        list(map(lambda x: x.Bind(wx.EVT_RADIOBUTTON, self.radio_button_changed), self.frame.option_list))
 
     def set_firmware(self):
         self.firmware_controller.set_custom_button_label1(u'查看详情')

@@ -16,6 +16,7 @@ class CheckListWithFilterPanel(wx.Panel):
     Panel that contains a checklist and a filter text ctrl with two customizable button.
     The two button can be achieved by .custom_button1 and .custom_button2.
     """
+
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
         self.column = 0
@@ -53,7 +54,6 @@ class CheckListWithFilterPanel(wx.Panel):
         main_box.Add(filter_box, 0, wx.EXPAND | wx.ALL, 10)
 
         self.SetSizerAndFit(main_box)
-
 
 
 if __name__ == '__main__':

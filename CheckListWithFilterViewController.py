@@ -4,8 +4,6 @@ import sys
 from CheckListWithFilterView import CheckListWithFilterPanel
 from Database import FilterListDatabase
 
-fake_data = [('android', '121'), ('ios', '34'), ('windows', '334'), ('linux', '41')]
-
 
 class CheckListWithFilterPanelController(object):
     """
@@ -21,6 +19,7 @@ class CheckListWithFilterPanelController(object):
 
     Use .get_display_items() to get items list on the display and use .set_display_items() to set
     """
+
     def __init__(self, parent, panel=None):
         # type: (wx.Frame | wx.Panel, CheckListWithFilterView.CheckListWithFilterPanel) -> None
         if panel is None:
