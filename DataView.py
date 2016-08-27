@@ -25,8 +25,8 @@ class DataFrame(wx.Frame):
         option_box.Add(plot_type_label, 0, wx.ALIGN_CENTRE | wx.BOTTOM, 10)
 
         self.pan_option = pan_option = wx.RadioButton(option_panel, label=u'饼状图', style=wx.RB_GROUP)
-        self.bar_option = bar_option = wx.RadioButton(option_panel, label=u'柱状图')
-        self.line_option = line_option = wx.RadioButton(option_panel, label=u'折线图')
+        self.bar_option = bar_option = wx.RadioButton(option_panel, label=u'成功/失败个数')
+        self.line_option = line_option = wx.RadioButton(option_panel, label=u'成功率趋势图')
         option_box.AddMany((i, 0, wx.TOP) for i in [pan_option, bar_option, line_option])
 
         option_box.AddSpacer(20)
