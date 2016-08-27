@@ -66,6 +66,7 @@ class IDATDBdatabase(object):
             row[-1] = row[-1].date()
             row_data = dict(zip(['case_name', 'firmware_version', 'firmware_name', 'content', 'type', 'date'], row))
             IDATDBdatabase.data.append(row_data)
+
             self.case_set.add(row_data['case_name'])
 
     # remained changing
@@ -138,4 +139,3 @@ class FilterListDatabase(object):
 class GraphDatabase(object):
     def __init__(self):
         pass
-

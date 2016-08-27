@@ -38,7 +38,7 @@ class CheckListWithFilterPanel(wx.Panel):
         self.reverse_select_button = reverse_select_button = wx.Button(self, label=u'反选')
         button_box.Add(reverse_select_button, 1, wx.EXPAND | wx.TOP | wx.BOTTOM, 3)
 
-        self.custom_button1 = custom_button1 = wx.Button(self, label=u'custom button')
+        self.custom_button1 = custom_button1 = wx.Button(self)
         button_box.Add(custom_button1, 1, wx.EXPAND | wx.TOP | wx.BOTTOM, 3)
 
         list_box.Add(button_box, 0, wx.EXPAND | wx.LEFT, 10)
@@ -48,7 +48,7 @@ class CheckListWithFilterPanel(wx.Panel):
         filter_box = wx.BoxSizer(wx.HORIZONTAL)
         self.filter_text_ctrl = filter_text_ctrl = wx.TextCtrl(self)
         filter_box.Add(filter_text_ctrl, 1, wx.EXPAND)
-        self.custom_button2 = custom_button2 = wx.Button(self, label=u'custom button')
+        self.custom_button2 = custom_button2 = wx.Button(self)
         filter_box.Add(custom_button2, 0, wx.EXPAND | wx.LEFT, 10)
 
         main_box.Add(filter_box, 0, wx.EXPAND | wx.ALL, 10)
