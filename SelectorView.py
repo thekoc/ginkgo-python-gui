@@ -5,7 +5,7 @@ from CheckListWithFilterView import CheckListWithFilterPanel
 from Database import IDATDBdatabase
 
 
-class SlectorPanel(wx.Panel):
+class SelectorPanel(wx.Panel):
     """选择时间, case 等的界面."""
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
@@ -44,5 +44,5 @@ class SlectorPanel(wx.Panel):
 
 if __name__ == '__main__':
     app = wx.App(False)
-    test_frame = SlectorPanel(None, 'Selector')
+    test_frame = SelectorPanel(None, 'Selector')
     app.MainLoop()

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*
 import wx
 import datetime
-from SelectorView import SlectorPanel
+from SelectorView import SelectorPanel
 from CheckListWithFilterViewController import CheckListWithFilterPanelController
 from wx.lib.pubsub import pub
 from Radio.MessageType import FrameMessage
@@ -27,9 +27,9 @@ def _pydate2wxdate(date):
 
 class SelectorPanelController(object):
     def __init__(self, panel=None):
-        # type: (SlectorPanel) -> None
+        # type: (SelectorPanel) -> None
         if panel is None:
-            panel = SlectorPanel(None, u'选择用例')
+            panel = SelectorPanel(None, u'选择用例')
             print('none')
         self.panel = panel
 
