@@ -82,7 +82,7 @@ class DataViewDatabase(object):
     def __init__(self):
         self.database = IDATDBdatabase()
         self.available_data = None
-        self.list_data = None
+        self.list_data = []
 
     def set_available_data(self, post_data):
 

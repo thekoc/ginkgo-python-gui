@@ -47,7 +47,7 @@ class DataFrameController(object):
         self.firmware_list_panel = frame.firmware_list
         self.firmware_controller = CheckListWithFilterPanelController(self.frame, self.firmware_list_panel)
 
-        self.case_controller = SlectorPanelController(self.frame.case_list_panel)
+        self.case_controller = SlectorPanelController(frame.case_list_panel)
 
         self.set_firmware()
 

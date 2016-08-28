@@ -178,15 +178,15 @@ class MatplotlibPanelController(object):
             success_number_list = [len([i for i in j if i['type'] in success]) for j in classified_data]
             fail_number_list = [len([i for i in j if i['type'] in fail]) for j in classified_data]
             ind = range(1, len(classified_data) + 1)
-            width = [0.8] * len(ind)
+            width = 0.8
 
-            axes.xaxis.set_ticks(ind + [i / 2 for i in width])
-            axes.xaxis.set_ticklabels([i[0][feature] for i in classified_data])
             axes.autoscale_view()
             axes.axes.set_ylabel(u'Amount of Success/Fail')
 
             b1 = axes.bar(ind, success_number_list, color='green')
             b2 = axes.bar(ind, fail_number_list, bottom=success_number_list, color='r')
+            axes.xaxis.set_ticks([i + width / 2 for i in ind])
+            axes.xaxis.set_ticklabels([i[0][feature] for i in classified_data])
             axes.legend((b1[0], b2[0]), ('Success', 'Fail'))
 
             self.canvas.draw()

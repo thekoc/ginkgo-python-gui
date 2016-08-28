@@ -30,6 +30,7 @@ class SlectorPanelController(object):
         # type: (SlectorPanel) -> None
         if panel is None:
             panel = SlectorPanel(None, u'选择用例')
+            print('none')
         self.panel = panel
 
         self.database = IDATDBdatabase()
@@ -37,7 +38,7 @@ class SlectorPanelController(object):
         self.start_date_ctrl = panel.start_date_ctrl
         self.end_date_ctrl = panel.end_date_ctrl
         self.check_list = panel.check_list
-        self.check_controller = CheckListWithFilterPanelController(self.panel.check_list)
+        self.check_controller = CheckListWithFilterPanelController(panel, self.check_list)
 
         self.view_loaded()
         self.action_bind()

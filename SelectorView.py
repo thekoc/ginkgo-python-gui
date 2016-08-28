@@ -8,10 +8,10 @@ from Database import IDATDBdatabase
 class SlectorPanel(wx.Panel):
     """选择时间, case 等的界面."""
     def __init__(self, parent):
-        # wx.Frame.__init__(self, parent, title=title, size=(300, 300))
         wx.Panel.__init__(self, parent)
-        self.panel = panel = self
+        print('builting')
         main_box = wx.BoxSizer(wx.VERTICAL)
+        panel = self
 
         # ======== time selector ========
         date_box = wx.BoxSizer(wx.HORIZONTAL)
@@ -28,14 +28,9 @@ class SlectorPanel(wx.Panel):
         main_box.Add(date_box, 0, wx.EXPAND | wx.ALL, 10)
 
         # ======== case selector ========
-        sizer = wx.BoxSizer(wx.VERTICAL)
+        self.check_list = check_list = CheckListWithFilterPanel(panel)
 
-        self.check_list = check_list = CheckListWithFilterPanel(self)
-
-        sizer.Add(check_list, 0, wx.ALIGN_CENTRE | wx.ALL, 5)
-        sizer.Fit(self)
-
-        main_box.Add(sizer, 1, wx.EXPAND | wx.ALL, 10)
+        main_box.Add(check_list, 1, wx.EXPAND | wx.ALL, 10)
         # 
         # # ======== inquire button ========
         # self.inquire_button = inquire_button = wx.Button(
