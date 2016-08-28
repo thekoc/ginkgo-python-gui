@@ -1,6 +1,6 @@
 from wx.lib.pubsub import pub
 from LoginViewController import LoginFrameController
-from SelectorViewController import SlectorPanelController
+from SelectorViewController import SelectorPanelController
 from DataViewController import DataFrameController
 from Radio.MessageType import FrameMessage
 from Radio.Radio import Channel
@@ -9,7 +9,7 @@ import wx
 
 class AppController(object):
     """
-    :type selector_controller : SlectorPanelController
+    :type selector_controller : SelectorPanelController
     :type data_frame_controller : DataFrameController
     """
     def __init__(self):

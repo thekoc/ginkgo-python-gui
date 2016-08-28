@@ -2,7 +2,7 @@
 from DataView import DataFrame
 from MatplotlibViewController import MatplotlibPanelController
 from CheckListWithFilterViewController import CheckListWithFilterPanelController
-from SelectorViewController import SlectorPanelController
+from SelectorViewController import SelectorPanelController
 from Database import DataViewDatabase
 import wx
 import sys
@@ -47,7 +47,7 @@ class DataFrameController(object):
         self.firmware_list_panel = frame.firmware_list
         self.firmware_controller = CheckListWithFilterPanelController(self.frame, self.firmware_list_panel)
 
-        self.case_controller = SlectorPanelController(frame.case_list_panel)
+        self.case_controller = SelectorPanelController(frame.case_list_panel)
 
         self.set_firmware()
 

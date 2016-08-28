@@ -25,7 +25,7 @@ def _pydate2wxdate(date):
     return wx.DateTimeFromDMY(*dmy)
 
 
-class SlectorPanelController(object):
+class SelectorPanelController(object):
     def __init__(self, panel=None):
         # type: (SlectorPanel) -> None
         if panel is None:
@@ -73,5 +73,5 @@ class SlectorPanelController(object):
 
 if __name__ == '__main__':
     app = wx.App(False)
-    con = SlectorPanelController()
+    con = SelectorPanelController()
     app.MainLoop()
