@@ -20,7 +20,7 @@ class CheckListWithFilterPanel(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
         self.column = 0
-        main_box = wx.BoxSizer(wx.VERTICAL)
+        self.main_box = main_box = wx.BoxSizer(wx.VERTICAL)
         list_box = wx.BoxSizer(wx.HORIZONTAL)
 
         # ======== list ctrl setting ========

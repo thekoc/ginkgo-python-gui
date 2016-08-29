@@ -26,6 +26,7 @@ class CheckListWithFilterPanelController(object):
         if panel is None:
             panel = CheckListWithFilterPanel(parent)
         self.panel = panel
+        self.is_warning_shown = False
         self.list_ctrl = panel.list_ctrl
         self.select_all_button = panel.select_all_button
         self.deselect_all_button = panel.deselect_all_button
@@ -121,19 +122,33 @@ class CheckListWithFilterPanelController(object):
         self.panel.column += 1
         self.list_ctrl.InsertColumn(column, title, width=-1)
 
-    def insert_row(self, row, items, display=True):
+    def safe_insert_row(self, row, items, display=True):
         if len(items) != self.panel.column:
             raise ValueError('Wrong Dimensionality')
         else:
             self.database.insert_row(row, items)
             if display:
-                index = 0
-                for no, item in enumerate(items):
-                    if no == 0:
-                        index = self.list_ctrl.InsertStringItem(row, item)
-                    else:
-                        self.list_ctrl.SetStringItem(index, no, item)
-                        self.list_ctrl.SetStringItem(index, no, item)
+                if self.list_ctrl.GetItemCount() < 300000:
+                    index = 0
+                    for no, item in enumerate(items):
+                        if no == 0:
+                            index = self.list_ctrl.InsertStringItem(row, item)
+                        else:
+                            self.list_ctrl.SetStringItem(index, no, item)
+                    return True
+                else:
+                    return False
+
+    def safe_insert_rows(self, rows):
+        print ('inserting')
+        warned = False
+        for i, r in enumerate(rows):
+            if not self.safe_insert_row(i, r):
+                if not warned:
+                    wx.MessageBox(u'数据过多, 将不会全部显示, 请用下方过滤文本框进行过滤', 'Info',
+                                  wx.OK | wx.ICON_INFORMATION)
+                warned = True
+        print ('done')
 
     def get_checked_item_text(self):
         """
@@ -159,22 +174,18 @@ class CheckListWithFilterPanelController(object):
         if row_items is None:
             row_items = self.database.row_items
         for items in row_items:
-            self.insert_row(sys.maxint, items)
-            if tuple(items) in self.database.checked_items:
-                self.list_ctrl.CheckItem(self.list_ctrl.GetItemCount() - 1)
+            if self.safe_insert_row(sys.maxint, items):
+                if tuple(items) in self.database.checked_items:
+                    self.list_ctrl.CheckItem(self.list_ctrl.GetItemCount() - 1)
 
     def set_custom_button_label1(self, label):
         self.custom_button1.LabelText = label
 
     def set_custom_function1(self, func):
         self.custom_button1.Bind(wx.EVT_BUTTON, func)
+
+    def set_double_click_function(self, func):
         self.list_ctrl.Bind(wx.EVT_LIST_ITEM_ACTIVATED, func)
-
-    def set_custom_button_label2(self, label):
-        self.custom_button2.LabelText = label
-
-    def set_custom_function2(self, func):
-        self.custom_button2.Bind(wx.EVT_BUTTON, func)
 
     def on_check_item(self, index, flag):
         row_items = tuple(self.list_ctrl.GetItemText(index, i) for i in range(0, self.panel.column))
@@ -191,6 +202,6 @@ if __name__ == '__main__':
     C.insert_column(0, 'Firmware')
     C.insert_column(1, 'Amount')
     for z in fake_data:
-        C.insert_row(sys.maxint, z)
+        C.safe_insert_row(sys.maxint, z)
     frame.Show()
     app.MainLoop()
