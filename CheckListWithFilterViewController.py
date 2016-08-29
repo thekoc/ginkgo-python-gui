@@ -3,6 +3,7 @@ import wx
 import sys
 from CheckListWithFilterView import CheckListWithFilterPanel
 from Database import FilterListDatabase
+import re
 
 
 class CheckListWithFilterPanelController(object):
@@ -30,9 +31,12 @@ class CheckListWithFilterPanelController(object):
         self.deselect_all_button = panel.deselect_all_button
         self.reverse_select_button = panel.reverse_select_button
         self.custom_button1 = panel.custom_button1
-        self.custom_button2 = panel.custom_button2
+        self.search_method_button = panel.search_method_button
         self.filter_text_ctrl = panel.filter_text_ctrl
         self.select_index = 0
+
+        self.search_method_types = ['contain', 'regex']
+        self.search_method = 'contain'
 
         self.database = FilterListDatabase()
 
@@ -46,6 +50,7 @@ class CheckListWithFilterPanelController(object):
         self.select_all_button.Bind(wx.EVT_BUTTON, self.select_all)
         self.deselect_all_button.Bind(wx.EVT_BUTTON, self.deselect_all)
         self.reverse_select_button.Bind(wx.EVT_BUTTON, self.reverse_select)
+        self.search_method_button.Bind(wx.EVT_BUTTON, self.switch_search_method)
 
         self.filter_text_ctrl.Bind(wx.EVT_TEXT, self.filter)
 
@@ -75,12 +80,30 @@ class CheckListWithFilterPanelController(object):
         for i in range(num):
             self.list_ctrl.CheckItem(i, not self.list_ctrl.IsChecked(i))
 
+    def switch_search_method(self, event):
+        if self.search_method_button.LabelText == u'切换到Regex':
+            self.search_method_button.LabelText = u'切换到包含'
+            self.search_method = self.search_method_types[1]
+        elif self.search_method_button.LabelText == u'切换到包含':
+            self.search_method_button.LabelText = u'切换到Regex'
+            self.search_method = self.search_method_types[0]
+        else:
+            raise KeyError(self.search_method_button.LabelText)
+
     def filter(self, event):
         text = self.filter_text_ctrl.Value.lower()
         self.list_ctrl.DeleteAllItems()
-        row_items = [[line.lower() for line in row] for row in self.database.row_items]
-        self.set_display_items(ori_items for ori_items, items in zip(self.database.row_items, row_items)
-                               if text in items[0])
+        assert self.search_method in self.search_method_types
+        if self.search_method == self.search_method_types[0]:
+            row_items = [[line.lower() for line in row] for row in self.database.row_items]
+            self.set_display_items(ori_items for ori_items, items in zip(self.database.row_items, row_items)
+                                   if text in items[0])
+        elif self.search_method == self.search_method_types[1]:
+            pat = re.compile(text)
+            row_items = [[line.lower() for line in row] for row in self.database.row_items]
+            self.set_display_items(ori_items for ori_items, items in zip(self.database.row_items, row_items)
+                                   if pat.match(items[0]))
+
 
     def apply(self, event):
         pass

@@ -48,8 +48,8 @@ class CheckListWithFilterPanel(wx.Panel):
         filter_box = wx.BoxSizer(wx.HORIZONTAL)
         self.filter_text_ctrl = filter_text_ctrl = wx.TextCtrl(self)
         filter_box.Add(filter_text_ctrl, 1, wx.EXPAND)
-        self.custom_button2 = custom_button2 = wx.Button(self)
-        filter_box.Add(custom_button2, 0, wx.EXPAND | wx.LEFT, 10)
+        self.search_method_button = search_method_button = wx.Button(self, label=u'切换到Regex')
+        filter_box.Add(search_method_button, 0, wx.EXPAND | wx.LEFT, 10)
 
         main_box.Add(filter_box, 0, wx.EXPAND | wx.ALL, 10)
 
