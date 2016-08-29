@@ -78,13 +78,14 @@ class IDATDBdatabase(object):
         """
         return list(self.case_set) * 100
 
+
 class DataViewDatabase(object):
     def __init__(self):
         self.database = IDATDBdatabase()
         self.available_data = None
         self.list_data = []
 
-    def set_available_data(self, post_data):
+    def set_available_data(self, post_data, feature):
 
         # type: (dict) -> dict[str, list[dict]]
         """
@@ -100,10 +101,10 @@ class DataViewDatabase(object):
         self.list_data = list(filter_data)
         available_data = {}
         for i in filter_data:
-            if available_data.get(i['firmware_name']) is None:
-                available_data[i['firmware_name']] = [i]
+            if available_data.get(i[feature]) is None:
+                available_data[i[feature]] = [i]
             else:
-                available_data[i['firmware_name']].append(i)
+                available_data[i[feature]].append(i)
         self.available_data = available_data
 
     def get_list_content(self):
@@ -112,7 +113,10 @@ class DataViewDatabase(object):
         content_rows = []
         for firm_name in available_data:
             value = available_data[firm_name]
-            content_rows.append((firm_name, str(len(set([j['case_name'] for j in value]))), str(len(value))))
+            content_rows.append(
+                (firm_name, str(len(set([j['case_name'] for j in value]))),
+                 str(len(value)))
+            )
         return content_rows
 
     def get_available_data_from_database(self):

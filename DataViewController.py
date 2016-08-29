@@ -81,11 +81,13 @@ class DataFrameController(object):
         self.frame.firmware_option.Value = True
 
     def set_start_data(self, post_data):
-        self.database.set_available_data(post_data)
+        self.database.set_available_data(post_data, 'firmware_version')
         content_rows = self.database.get_list_content()
         self.firmware_controller.delete_all_items()
-        for i, row in enumerate(content_rows):
-            self.firmware_controller.insert_row(i, row)
+        # for i, row in enumerate(content_rows):
+        #     # print('adding', i)
+        #     self.firmware_controller.safe_insert_row(i, row)
+        self.firmware_controller.safe_insert_rows(content_rows)
         self.plot_data()
 
     def more(self, event):
