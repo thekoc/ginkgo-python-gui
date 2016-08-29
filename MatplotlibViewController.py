@@ -147,8 +147,7 @@ class MatplotlibPanelController(object):
                 success_dict = {}
                 for key in plot_data_dict:
                     items = plot_data_dict[key]
-                    success_dict[key] = sum(1 for i in items if i[
-                                            'type'] in success) / len(items)
+                    success_dict[key] = len(list(i for i in items if i['type'] in success)) / len(items)
                     assert isinstance(success_dict[key], float)
 
                 plot_items = sorted(success_dict.items(),
@@ -186,8 +185,22 @@ class MatplotlibPanelController(object):
             b1 = axes.bar(ind, success_number_list, color='green')
             b2 = axes.bar(ind, fail_number_list, bottom=success_number_list, color='r')
             axes.xaxis.set_ticks([i + width / 2 for i in ind])
-            axes.xaxis.set_ticklabels([i[0][feature] for i in classified_data])
+            axes.xaxis.set_ticklabels(
+                [i[0][feature] for i in classified_data], rotation=20, ha='right'
+            )
             axes.legend((b1[0], b2[0]), ('Success', 'Fail'))
+            ylim = axes.get_ylim()
+            axes.set_ylim(ylim[0], ylim[1] * 1.06)
+
+            for i, v in zip(ind, zip(success_number_list, fail_number_list)):
+                total = v[0] + v[1]
+                axes.text(
+                    i + width / 2, total * 1.03,
+                    str(round(100 * v[0] / total, 2)) + '%',
+                    ha='center'
+                )
+
+            self.figure.tight_layout()
 
             self.canvas.draw()
 
