@@ -61,14 +61,14 @@ class MatplotlibPanelController(object):
             option: two-element tuple.
         """
         if option[1] == u'版本号':
-            feature = 'firmware_name'
+            feature = 'firmware_version'
         elif option[1] == u'测试用例':
             feature = 'case_name'
         else:
             raise ValueError
         classified_data = self.common_classify_data(data, feature)
 
-        if option[0] == u'饼状图':
+        if option[0] == u'比例分布':
             self.plot_pie_graph(classified_data, feature)
         elif option[0] == u'成功/失败个数':
             self.plot_bar_graph(classified_data, feature)
