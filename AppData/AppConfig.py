@@ -34,6 +34,7 @@ class AppConfig(object):
         try:
             with open(self.file_path, 'wb') as configfile:
                 self.config.write(configfile)
+                print('done')
         finally:
             AppConfig.lock.release()
 

@@ -47,11 +47,10 @@ class SelectorPanelController(object):
         self.start_date_ctrl.Value = self.end_date_ctrl.Value - wx.DateSpan(months=1)
         # set check_ctrl
         check_controller = self.check_controller
-        check_controller.set_custom_button_label2(u'更新数据')
-        check_controller.set_custom_function2(self.inquire)
+        check_controller.set_custom_button_label1(u'更新数据')
+        check_controller.set_custom_function1(self.inquire)
         check_controller.insert_column(0, u'用例')
-        for i, c in enumerate(IDATDBdatabase.case_set):
-            check_controller.insert_row(i, (c,))
+        check_controller.safe_insert_rows((c, ) for c in IDATDBdatabase.case_set)
 
     def action_bind(self):
         pass
@@ -60,7 +59,6 @@ class SelectorPanelController(object):
         data = dict()
         data['date'] = (self.get_start_date(), self.get_end_date())
         data['case_set'] = set(self.check_controller.get_checked_item_text())
-        print(data)
         pub.sendMessage(Channel.fmFrame, sender=self.panel, msg=FrameMessage.inquire,
                         data=data)
 

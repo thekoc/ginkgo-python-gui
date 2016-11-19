@@ -56,12 +56,11 @@ class DataFrameController(object):
 
     def action_bind(self):
         list(map(lambda x: x.Bind(wx.EVT_RADIOBUTTON, self.radio_button_changed), self.frame.option_list))
+        self.firmware_controller.set_double_click_function(self.more)
 
     def set_firmware(self):
-        self.firmware_controller.set_custom_button_label1(u'查看详情')
-        self.firmware_controller.set_custom_function1(self.more)
-        self.firmware_controller.set_custom_button_label2(u'更新图像')
-        self.firmware_controller.set_custom_function2(self.update_graph)
+        self.firmware_controller.set_custom_button_label1(u'更新图像')
+        self.firmware_controller.set_custom_function1(self.update_graph)
 
         self.firmware_controller.insert_column(0, u'固件号')
         self.firmware_controller.insert_column(1, u'测试用例数')
@@ -114,10 +113,18 @@ class DataFrameController(object):
         return [i.GetLabel() for i in self.frame.option_list if i.Value]
 
     def plot_data(self):
+        print('plotting')
         data = self.database.get_available_data_from_database()
-        data = [i for i in data if i['firmware_name'] in self.firmware_controller.get_checked_item_text()]
+        print('1')
+        checked = self.firmware_controller.get_checked_item_text()
+        print(checked)
+        print('2')
+        data = [i for i in data if i['firmware_version'] in checked]
+        print('3')
         option = self.get_option()
+        print('4')
         pub.sendMessage(Channel.fmGraph, msg=GraphMessage.plot, data=data, option=option)
+        print('done')
 
 
 if __name__ == '__main__':

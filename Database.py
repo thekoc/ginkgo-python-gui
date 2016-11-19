@@ -133,6 +133,9 @@ class FilterListDatabase(object):
         if items not in self.row_items:
             self.row_items.insert(row, items)
 
+    def append_rows(self, rows):
+        self.row_items += rows
+
     def merge_checked_item(self, item_text):
         self.checked_items.add(item_text)
 

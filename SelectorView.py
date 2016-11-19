@@ -9,7 +9,6 @@ class SelectorPanel(wx.Panel):
     """选择时间, case 等的界面."""
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
-        print('builting')
         main_box = wx.BoxSizer(wx.VERTICAL)
         panel = self
 
